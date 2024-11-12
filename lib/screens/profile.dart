@@ -11,13 +11,11 @@ class Profile extends StatelessWidget {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ActionBar(takePhoto: true, updatePosition: () {}),
-           
-           Container(
-            padding: const EdgeInsets.all(20.0), 
-            margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 30), 
+          Container(
+            padding: const EdgeInsets.all(20.0),
+            margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -26,25 +24,29 @@ class Profile extends StatelessWidget {
                   color: Colors.grey.withOpacity(0.5),
                   spreadRadius: 2,
                   blurRadius: 5,
-                  offset: Offset(0, 3), 
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    'Dados do Usuário',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 Text(
-                'Dados do Usuário',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  'Nome:',
+                  style: TextStyle(
+                    fontSize: 17,
+                  ),
                 ),
-              ),
-              Text(
-                'Nome:',
-                style: TextStyle(
-                  fontSize: 17,
-                ),
-              ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
@@ -61,11 +63,11 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                'Telefone:',
-                style: TextStyle(
-                  fontSize: 17,
+                  'Telefone:',
+                  style: TextStyle(
+                    fontSize: 17,
+                  ),
                 ),
-              ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
@@ -82,11 +84,11 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                'Endereço:',
-                style: TextStyle(
-                  fontSize: 17,
+                  'Endereço:',
+                  style: TextStyle(
+                    fontSize: 17,
+                  ),
                 ),
-              ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
