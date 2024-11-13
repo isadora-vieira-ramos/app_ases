@@ -113,7 +113,6 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
                         content: Container(child: null),
                         stepStyle: StepStyle(
                           color: getIndexInList(value) <= getIndexInList(currentPosition)? Theme.of(context).primaryColor: Colors.grey,
-                          connectorColor: getIndexInList(value) <= getIndexInList(currentPosition)? Theme.of(context).primaryColor: Colors.grey
                         )
                       );
                     }).toList()
