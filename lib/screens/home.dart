@@ -8,14 +8,11 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body: Column(
+        body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        ActionBar(takePhoto: true)
-      ],
+      children: [ActionBar(takePhoto: true, updatePosition: () {})],
     ));
   }
 }

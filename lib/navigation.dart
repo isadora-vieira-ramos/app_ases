@@ -1,5 +1,7 @@
+import 'package:app_ases/models/user.dart';
 import 'package:app_ases/screens/home.dart';
 import 'package:app_ases/screens/monitor_flight.dart';
+import 'package:app_ases/screens/profile.dart';
 import 'package:flutter/material.dart';
 
 class Navigation extends StatefulWidget {
@@ -14,8 +16,20 @@ class _NavigationState extends State<Navigation> {
   List<Widget> widgetOptions = <Widget>[
     const Home(),
     MonitorFlightScreen(),
-    const Text('Index 2: Perfil'),
+    const Profile(),
   ];
+
+  User user = new User(name: "Teste", type: UserType.passenger, telephone: "13232132213", address: "Teste");
+
+  getUserTypeDescription(UserType type){
+    if(type == UserType.admin){
+      return "Administrador";
+    }else if(type == UserType.passenger){
+      return "Passageiro";
+    }else {
+      return "Piloto";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,23 +59,23 @@ class _NavigationState extends State<Navigation> {
           color: Theme.of(context).colorScheme.primary,
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 32),
-          child: const Column(
+          child: Column(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 40,
                 backgroundImage: AssetImage('lib/images/profile_picture.jpg'),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
-                "Olá, ...!",
-                style: TextStyle(
+                "Olá, ${user.name}!",
+                style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
               Text(
-                "Passageiro",
-                style: TextStyle(fontSize: 16, color: Colors.white70),
+                getUserTypeDescription(user.type),
+                style: const TextStyle(fontSize: 16, color: Colors.white70),
               ),
             ],
           ),

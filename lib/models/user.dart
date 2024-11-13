@@ -5,6 +5,10 @@ class User{
   final String address;
 
   User({required this.name, required this.type, required this.telephone, required this.address});
+
+  getUserName(){
+    return name;
+  }
 }
 
 enum UserType { passenger, pilot, admin }
