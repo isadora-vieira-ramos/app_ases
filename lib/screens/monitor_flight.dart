@@ -30,10 +30,10 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
       });
     }
 
-    int getIndexInList(String value){
-      if(value.isEmpty){
+    int getIndexInList(String value) {
+      if (value.isEmpty) {
         return 0;
-      }else{
+      } else {
         return ActionBar.positionList.indexOf(value);
       }
     }
@@ -93,31 +93,32 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
                   style: TextStyle(fontSize: 16),
                 ),
                 Expanded(
-                  child: Stepper(
-                    currentStep: getIndexInList(currentPosition),
-                    controlsBuilder: (BuildContext context, ControlsDetails details) {
-                      return Row(
-                        children: <Widget>[
-                          Container(
-                            child: null,
-                          ),
-                          Container(
-                            child: null,
-                          ),
-                        ],
-                      );
-                    },
-                    steps: ActionBar.positionList.map<Step>((String value) {
-                      return Step(
-                        title: Text(value), 
-                        content: Container(child: null),
-                        stepStyle: StepStyle(
-                          color: getIndexInList(value) <= getIndexInList(currentPosition)? Theme.of(context).primaryColor: Colors.grey,
-                        )
-                      );
-                    }).toList()
-                  )
-                ),
+                    child: Stepper(
+                        currentStep: getIndexInList(currentPosition),
+                        controlsBuilder:
+                            (BuildContext context, ControlsDetails details) {
+                          return Row(
+                            children: <Widget>[
+                              Container(
+                                child: null,
+                              ),
+                              Container(
+                                child: null,
+                              ),
+                            ],
+                          );
+                        },
+                        steps: ActionBar.positionList.map<Step>((String value) {
+                          return Step(
+                              title: Text(value),
+                              content: Container(child: null),
+                              stepStyle: StepStyle(
+                                color: getIndexInList(value) <=
+                                        getIndexInList(currentPosition)
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey,
+                              ));
+                        }).toList())),
                 const Text(
                   "Ponto de Chegada:",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
