@@ -1,4 +1,5 @@
 import 'package:app_ases/screens/flight_code.dart';
+import 'package:app_ases/screens/welcome_carousel.dart'; // Certifique-se de importar a tela correta.
 import 'package:app_ases/utils/action_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -105,6 +106,33 @@ class Profile extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          Spacer(),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WelcomeCarousel(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 15,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+                child: const Text('Orientações'),
+              ),
             ),
           ),
         ],
