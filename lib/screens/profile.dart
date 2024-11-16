@@ -1,8 +1,5 @@
-import 'package:app_ases/screens/flight_code.dart';
 import 'package:app_ases/screens/welcome_carousel.dart'; // Certifique-se de importar a tela correta.
-import 'package:app_ases/utils/action_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -101,7 +98,7 @@ class Profile extends StatelessWidget {
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Ex. Av. Ipiranga, 88 - POA/RS",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                     ),
                   ),
                 ),
@@ -122,16 +119,19 @@ class Profile extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  textStyle: const TextStyle(fontSize: 18),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 15,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    textStyle: const TextStyle(fontSize: 18),
+                    backgroundColor: Theme.of(context).colorScheme.secondary),
+                child: const Text(
+                  'Orientações',
+                  style: TextStyle(color: Colors.white),
                 ),
-                child: const Text('Orientações'),
               ),
             ),
           ),
