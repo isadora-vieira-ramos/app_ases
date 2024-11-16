@@ -6,10 +6,10 @@ class WelcomeCarousel extends StatefulWidget {
   const WelcomeCarousel({super.key});
 
   @override
-  _WelcomeCarouselState createState() => _WelcomeCarouselState();
+  WelcomeCarouselState createState() => WelcomeCarouselState();
 }
 
-class _WelcomeCarouselState extends State<WelcomeCarousel> {
+class WelcomeCarouselState extends State<WelcomeCarousel> {
   final PageController _controller = PageController();
   int _currentPage = 0;
 
@@ -126,7 +126,7 @@ class _WelcomeCarouselState extends State<WelcomeCarousel> {
               ),
             ),
             // Exibe o botão "Começar" apenas na última página
-            if (_currentPage == 7)
+            if (_currentPage == 7) ...[
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
@@ -148,6 +148,23 @@ class _WelcomeCarouselState extends State<WelcomeCarousel> {
                   ),
                 ),
               ),
+            ] else ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Arraste para o lado",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 20, color: Colors.white),
+                  ),
+                  const Icon(
+                    Icons.arrow_right_alt,
+                    color: Colors.white,
+                    size: 50,
+                  )
+                ],
+              )
+            ]
           ],
         ),
       ),
@@ -162,96 +179,98 @@ class _WelcomeCarouselState extends State<WelcomeCarousel> {
     List<String> contentList =
         content.split('\n'); // Dividir o conteúdo em parágrafos
 
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset('lib/images/logo.png', width: 100, height: 100),
-          const SizedBox(height: 20),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('lib/images/logo.png', width: 100, height: 100),
+            const SizedBox(height: 20),
 
-          // Container para o título e o primeiro parágrafo
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 3,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue[800],
+            // Container para o título e o primeiro parágrafo
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 3,
+                    offset: Offset(0, 2),
                   ),
-                ),
-                const SizedBox(height: 8),
-                // Parágrafos do conteúdo
-                SingleChildScrollView(
-                  // Adiciona rolagem para o conteúdo
-                  child: Column(
-                    children: contentList
-                        .map((text) => Padding(
-                              padding: const EdgeInsets.only(bottom: 6.0),
-                              child: Text(
-                                text,
-                                textAlign: TextAlign.justify,
-                                style: GoogleFonts.montserrat(fontSize: 16),
-                              ),
-                            ))
-                        .toList(),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[800],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          // Adiciona o segundo container somente na primeira página
-          if (isFirstPage)
-            Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 3,
-                      offset: Offset(0, 2),
+                  const SizedBox(height: 8),
+                  // Parágrafos do conteúdo
+                  SingleChildScrollView(
+                    // Adiciona rolagem para o conteúdo
+                    child: Column(
+                      children: contentList
+                          .map((text) => Padding(
+                                padding: const EdgeInsets.only(bottom: 6.0),
+                                child: Text(
+                                  text,
+                                  textAlign: TextAlign.justify,
+                                  style: GoogleFonts.montserrat(fontSize: 16),
+                                ),
+                              ))
+                          .toList(),
                     ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Para mais detalhes, acesse nosso site asesbrasil.org.br ou entre em contato pelo Whatsapp (12) 98102 0346.',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(fontSize: 16),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Prepare-se para uma jornada especial!',
-                      textAlign: TextAlign.justify,
-                      style: GoogleFonts.montserrat(fontSize: 16),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-        ],
+
+            // Adiciona o segundo container somente na primeira página
+            if (isFirstPage)
+              Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 3,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Para mais detalhes, acesse nosso site asesbrasil.org.br ou entre em contato pelo Whatsapp (12) 98102 0346.',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.montserrat(fontSize: 16),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Prepare-se para uma jornada especial!',
+                        textAlign: TextAlign.justify,
+                        style: GoogleFonts.montserrat(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
