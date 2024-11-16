@@ -1,4 +1,3 @@
-import 'package:app_ases/navigation.dart';
 import 'package:app_ases/screens/welcome_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -163,6 +162,9 @@ class FlightCode extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10, top: 20),
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                          Theme.of(context).colorScheme.secondary)),
                   onPressed: () {
                     goToHome(context);
                   },

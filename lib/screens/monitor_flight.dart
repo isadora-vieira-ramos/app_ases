@@ -1,11 +1,10 @@
 import 'package:app_ases/models/flight_info.dart';
-import 'package:app_ases/screens/flight_code.dart';
 import 'package:app_ases/services/flight_service.dart';
 import 'package:app_ases/utils/action_bar.dart';
 import 'package:flutter/material.dart';
 
 class MonitorFlightScreen extends StatefulWidget {
-  MonitorFlightScreen({super.key});
+  const MonitorFlightScreen({super.key});
 
   @override
   State<MonitorFlightScreen> createState() => _MonitorFlightScreenState();
