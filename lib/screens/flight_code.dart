@@ -2,11 +2,21 @@ import 'package:app_ases/screens/welcome_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class FlightCode extends StatelessWidget {
+class FlightCode extends StatefulWidget {
   const FlightCode({super.key});
 
   @override
+  State<FlightCode> createState() => _FlightCodeState();
+}
+
+class _FlightCodeState extends State<FlightCode> {
+  String? selectedValue;
+  String? flightCode;
+  bool buttonEnabled = false;
+
+  @override
   Widget build(BuildContext context) {
+
     void goToHome(BuildContext context) {
       showDialog(
         context: context,
@@ -149,6 +159,16 @@ class FlightCode extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 120, right: 120),
                 child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      flightCode = value;
+                      if(flightCode != null && selectedValue!= null){
+                        buttonEnabled = true;
+                      }else{
+                        buttonEnabled = false;
+                      }
+                    });
+                  },
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
@@ -160,20 +180,54 @@ class FlightCode extends StatelessWidget {
                 ),
               ),
               Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text("Qual tipo de usuário você é?",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 15, fontWeight: FontWeight.normal)),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left:20.0, right: 20.0, top:8.0, bottom: 8.0),
+                  child: DropdownButton(
+                    value: selectedValue,
+                    items: <String>['Paciente', 'Acompanhante', 'Voluntário']
+                      .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value, style: const TextStyle(color: Colors.grey)),
+                        );
+                    }).toList(), 
+                    onChanged: (String? value) { 
+                      setState(() {
+                        selectedValue = value!;
+                        if(flightCode != null && selectedValue!= null){
+                          buttonEnabled = true;
+                        }else{
+                          buttonEnabled = false;
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.only(bottom: 10, top: 20),
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all<Color>(
-                          Theme.of(context).colorScheme.secondary)),
-                  onPressed: () {
-                    goToHome(context);
-                  },
+                    backgroundColor: WidgetStateProperty.all<Color>(
+                        buttonEnabled? Theme.of(context).colorScheme.secondary: Theme.of(context).colorScheme.secondary.withOpacity(0.05),
+                  )),
+                  onPressed: () => buttonEnabled? () => (context) : null,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Text(
                       "Entrar",
                       style: GoogleFonts.montserrat(
-                        color: Colors.white,
+                        color: buttonEnabled? Colors.white: Colors.white.withOpacity(0.5),
                         fontSize: 18,
                       ),
                     ),
