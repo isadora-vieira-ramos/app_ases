@@ -3,6 +3,8 @@ import 'package:app_ases/screens/flight_code.dart';
 import 'package:app_ases/services/flight_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ActionBar extends StatefulWidget {
   final bool takePhoto;
@@ -23,6 +25,33 @@ class ActionBar extends StatefulWidget {
 
 class _ActionBarState extends State<ActionBar> {
   final FlightService flightService = FlightService();
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(BuildContext context) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      // Verifica a extensão do arquivo
+      final String extension = image.name.split('.').last.toLowerCase();
+      print('Extensão da imagem: $extension'); // Log para depuração
+      if (extension == 'jpg' || extension == 'jpeg' || extension == 'png') {
+        Fluttertoast.showToast(
+          msg: "Imagem alterada",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: const Color(0xFF64ccf3), // Cor de fundo azul
+          textColor: Colors.white, // Cor do texto
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: "Formato inválido",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: const Color(0xFF64ccf3), // Cor de fundo vermelha
+          textColor: Colors.white, // Cor do texto
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +130,8 @@ class _ActionBarState extends State<ActionBar> {
                   currentPosition = value!;
                 });
               },
-              dropdownMenuEntries:
-                  ActionBar.positionList.map<DropdownMenuEntry<String>>((String value) {
+              dropdownMenuEntries: ActionBar.positionList
+                  .map<DropdownMenuEntry<String>>((String value) {
                 return DropdownMenuEntry<String>(value: value, label: value);
               }).toList()),
         ),
@@ -152,7 +181,7 @@ class _ActionBarState extends State<ActionBar> {
           children: [
             if (widget.takePhoto) ...[
               GestureDetector(
-                  onTap: () {},
+                  onTap: () => _pickImage(context),
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
