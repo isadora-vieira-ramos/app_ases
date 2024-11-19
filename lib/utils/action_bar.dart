@@ -44,9 +44,9 @@ class _ActionBarState extends State<ActionBar> {
               content: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Image.network(flightInfo.pilotPhoto, height: 100),
+                    Image.network(flightInfo.volunteers[0].photo, height: 100),
                     const SizedBox(height: 8),
-                    Text(flightInfo.pilotName,
+                    Text(flightInfo.volunteers[0].name,
                         style: const TextStyle(fontSize: 18)),
                     const Divider(),
                   ],
