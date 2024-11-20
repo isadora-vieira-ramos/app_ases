@@ -287,7 +287,7 @@ class _FlightCodeState extends State<FlightCode> {
                 padding: const EdgeInsets.only(bottom: 10, top: 20),
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all<Color>(
+                      backgroundColor: MaterialStateProperty.all<Color>(
                           Theme.of(context).colorScheme.secondary)),
                   onPressed: () => validateAndSubmit(context),
                   child: Padding(
