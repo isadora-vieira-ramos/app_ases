@@ -158,6 +158,30 @@ class _FlightCodeState extends State<FlightCode> {
 
   @override
   Widget build(BuildContext context) {
+
+    void showRecoveryMessage() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Esqueceu seu código de acesso?'),
+            content: const Text(
+                "Para recuperá-lo, entre em contato com a equipe da ASES:\n"
+                "- 🌐 asesbrasil.org.br\n"
+                "- 📱 WhatsApp: (12) 98102-0346\n\n"
+                "Estamos aqui para ajudar você!"),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Fechar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
@@ -260,7 +284,7 @@ class _FlightCodeState extends State<FlightCode> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: showRecoveryMessage,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text('Esqueci meu código',
