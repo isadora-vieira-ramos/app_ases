@@ -1,6 +1,7 @@
 import 'package:app_ases/screens/welcome_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:app_ases/navigation.dart';
 
 class FlightCode extends StatefulWidget {
   const FlightCode({super.key});
@@ -12,125 +13,151 @@ class FlightCode extends StatefulWidget {
 class _FlightCodeState extends State<FlightCode> {
   String? selectedValue;
   String? flightCode;
-  bool buttonEnabled = false;
+  String? errorMessage;
 
-  @override
-  Widget build(BuildContext context) {
-
-    void goToHome(BuildContext context) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            contentPadding: const EdgeInsets.all(16.0),
-            content: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.6,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Termo de Uso de Imagem',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
+  void goToHome(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          contentPadding: const EdgeInsets.all(16.0),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Termo de Uso de Imagem',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Eu, declaro que li, entendi e concordo com as condições estabelecidas para o uso dos meus dados pessoais, conforme descrito abaixo, de acordo com a Lei Geral de Proteção de Dados Pessoais (LGPD):",
-                      style: GoogleFonts.montserrat(fontSize: 18),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Eu autorizo a coleta e o tratamento dos meus dados pessoais, incluindo, mas não se limitando a, fotos, mensagens e outros dados necessários para o funcionamento do serviço.",
-                      style: GoogleFonts.montserrat(fontSize: 18),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Entendo que fotos e mensagens poderão ser armazenadas conforme necessário para a prestação dos serviços e funcionalidades do aplicativo.",
-                      style: GoogleFonts.montserrat(fontSize: 18),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Estou ciente de que posso exercer meus direitos sobre meus dados pessoais a qualquer momento.",
-                      style: GoogleFonts.montserrat(fontSize: 18),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.grey[200],
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.block, color: Colors.grey),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Discordo',
-                      style: GoogleFonts.montserrat(
-                        color: Colors.grey,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
+                  const SizedBox(height: 10),
+                  Text(
+                    "Eu, declaro que li, entendi e concordo com as condições estabelecidas para o uso dos meus dados pessoais, conforme descrito abaixo, de acordo com a Lei Geral de Proteção de Dados Pessoais (LGPD):",
+                    style: GoogleFonts.montserrat(fontSize: 18),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Eu autorizo a coleta e o tratamento dos meus dados pessoais, incluindo, mas não se limitando a, fotos, mensagens e outros dados necessários para o funcionamento do serviço.",
+                    style: GoogleFonts.montserrat(fontSize: 18),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Entendo que fotos e mensagens poderão ser armazenadas conforme necessário para a prestação dos serviços e funcionalidades do aplicativo.",
+                    style: GoogleFonts.montserrat(fontSize: 18),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Estou ciente de que posso exercer meus direitos sobre meus dados pessoais a qualquer momento.",
+                    style: GoogleFonts.montserrat(fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.grey[200],
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              TextButton(
-                onPressed: () {
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.block, color: Colors.grey),
+                  const SizedBox(width: 5),
+                  Text(
+                    'Discordo',
+                    style: GoogleFonts.montserrat(
+                      color: Colors.grey,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                if (selectedValue == 'Paciente' ||
+                    selectedValue == 'Acompanhante') {
                   Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const WelcomeCarousel()),
                   );
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.check, color: Colors.white),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Concordo',
-                      style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
+                } else {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Navigation()),
+                  );
+                }
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
-            ],
-          );
-        },
-      );
-    }
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.check, color: Colors.white),
+                  const SizedBox(width: 5),
+                  Text(
+                    'Concordo',
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
+  void validateAndSubmit(BuildContext context) {
+    setState(() {
+      errorMessage = null;
+    });
+
+    if (selectedValue == null || flightCode == null || flightCode!.isEmpty) {
+      setState(() {
+        errorMessage = 'Por favor, preencha todos os campos.';
+      });
+      return;
+    }
+    if (selectedValue == 'Paciente' || selectedValue == 'Acompanhante') {
+      goToHome(context);
+    } else {
+      goToHome(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
@@ -152,6 +179,37 @@ class _FlightCodeState extends State<FlightCode> {
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
+                child: Text("Selecione o tipo de usuário:",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 15, fontWeight: FontWeight.normal)),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 60.0, right: 60.0),
+                  child: DropdownButton(
+                    value: selectedValue,
+                    items: <String>['Paciente', 'Acompanhante', 'Voluntário']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        alignment: Alignment.centerLeft,
+                        child: Text(value,
+                            style: const TextStyle(color: Colors.grey)),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedValue = value!;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
                 child: Text("Insira seu código de acesso:",
                     style: GoogleFonts.montserrat(
                         fontSize: 15, fontWeight: FontWeight.normal)),
@@ -162,11 +220,6 @@ class _FlightCodeState extends State<FlightCode> {
                   onChanged: (value) {
                     setState(() {
                       flightCode = value;
-                      if(flightCode != null && selectedValue!= null){
-                        buttonEnabled = true;
-                      }else{
-                        buttonEnabled = false;
-                      }
                     });
                   },
                   decoration: InputDecoration(
@@ -179,55 +232,27 @@ class _FlightCodeState extends State<FlightCode> {
                       hintStyle: const TextStyle(color: Colors.grey)),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text("Qual tipo de usuário você é?",
-                    style: GoogleFonts.montserrat(
-                        fontSize: 15, fontWeight: FontWeight.normal)),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20)
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left:20.0, right: 20.0, top:8.0, bottom: 8.0),
-                  child: DropdownButton(
-                    value: selectedValue,
-                    items: <String>['Paciente', 'Acompanhante', 'Voluntário']
-                      .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value, style: const TextStyle(color: Colors.grey)),
-                        );
-                    }).toList(), 
-                    onChanged: (String? value) { 
-                      setState(() {
-                        selectedValue = value!;
-                        if(flightCode != null && selectedValue!= null){
-                          buttonEnabled = true;
-                        }else{
-                          buttonEnabled = false;
-                        }
-                      });
-                    },
+              if (errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    errorMessage!,
+                    style: TextStyle(color: Colors.red, fontSize: 14),
                   ),
                 ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10, top: 20),
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                        buttonEnabled? Theme.of(context).colorScheme.secondary: Theme.of(context).colorScheme.secondary.withOpacity(0.05),
-                  )),
-                  onPressed: () => buttonEnabled? () => (context) : null,
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).colorScheme.secondary)),
+                  onPressed: () => validateAndSubmit(context),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Text(
                       "Entrar",
                       style: GoogleFonts.montserrat(
-                        color: buttonEnabled? Colors.white: Colors.white.withOpacity(0.5),
+                        color: Colors.white,
                         fontSize: 18,
                       ),
                     ),
