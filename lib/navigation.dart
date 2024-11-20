@@ -1,3 +1,4 @@
+import 'package:app_ases/models/flight_info.dart';
 import 'package:app_ases/models/user.dart';
 import 'package:app_ases/screens/home.dart';
 import 'package:app_ases/screens/monitor_flight.dart';
@@ -5,7 +6,9 @@ import 'package:app_ases/screens/profile.dart';
 import 'package:flutter/material.dart';
 
 class Navigation extends StatefulWidget {
-  const Navigation({super.key});
+  FlightInfo flightInfo;
+  UserType userType;
+  Navigation({super.key, required this.flightInfo, required this.userType});
 
   @override
   State<Navigation> createState() => _NavigationState();
@@ -13,30 +16,18 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int currentPageIndex = 0;
-  List<Widget> widgetOptions = <Widget>[
-    const Home(),
-    MonitorFlightScreen(),
-    const Profile(),
-  ];
-
-  User user = new User(
-      name: "Teste",
-      type: UserType.patient,
-      telephone: "13232132213",
-      address: "Teste");
-
-  getUserTypeDescription(UserType type) {
-    if (type == UserType.volunteer) {
-      return "Voluntário";
-    } else if (type == UserType.patient) {
-      return "Paciente";
-    } else {
-      return "Acompanhante";
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> widgetOptions = <Widget>[
+      const Home(),
+      const MonitorFlightScreen(),
+      Profile(
+        flightInfo: widget.flightInfo,
+        userType: widget.userType,
+      ),
+    ];
+
     return Scaffold(
         bottomNavigationBar: NavigationBar(
           backgroundColor: Colors.white,
@@ -71,15 +62,15 @@ class _NavigationState extends State<Navigation> {
                           AssetImage('lib/images/profile_picture.jpg'),
                     ),
                     const SizedBox(height: 8),
+                    // Text(
+                    //   "Olá, ${user.name}!",
+                    //   style: const TextStyle(
+                    //       fontSize: 20,
+                    //       fontWeight: FontWeight.bold,
+                    //       color: Colors.white),
+                    // ),
                     Text(
-                      "Olá, ${user.name}!",
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    Text(
-                      getUserTypeDescription(user.type),
+                      User.getUserTypeDescription(widget.userType),
                       style:
                           const TextStyle(fontSize: 16, color: Colors.white70),
                     ),

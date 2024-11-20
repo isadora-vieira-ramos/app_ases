@@ -1,9 +1,14 @@
+import 'package:app_ases/models/flight_info.dart';
+import 'package:app_ases/models/user.dart';
 import 'package:app_ases/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WelcomeCarousel extends StatefulWidget {
-  const WelcomeCarousel({super.key});
+  FlightInfo flightInfo;
+  UserType userType;
+  WelcomeCarousel(
+      {super.key, required this.flightInfo, required this.userType});
 
   @override
   WelcomeCarouselState createState() => WelcomeCarouselState();
@@ -138,7 +143,9 @@ class WelcomeCarouselState extends State<WelcomeCarousel> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Navigation()),
+                          builder: (context) => Navigation(
+                              flightInfo: widget.flightInfo,
+                              userType: widget.userType)),
                     );
                   },
                   child: Text(

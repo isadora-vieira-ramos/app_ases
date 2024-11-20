@@ -1,4 +1,5 @@
 import 'package:app_ases/models/flight_info.dart';
+import 'package:app_ases/models/user.dart';
 import 'package:app_ases/screens/flight_code.dart';
 import 'package:app_ases/services/flight_service.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,8 @@ class _ActionBarState extends State<ActionBar> {
 
     void showFlightInfoModal() async {
       try {
-        FlightInfo flightInfo = await flightService.fetchFlightInfo();
+        FlightInfo? flightInfo =
+            await flightService.fetchFlightInfo(UserType.volunteer, '1234');
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -73,9 +75,9 @@ class _ActionBarState extends State<ActionBar> {
               content: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Image.network(flightInfo.volunteers[0].photo, height: 100),
+                    Image.network(flightInfo!.volunteers[0].photo, height: 100),
                     const SizedBox(height: 8),
-                    Text(flightInfo.volunteers[0].name,
+                    Text(flightInfo!.volunteers[0].name,
                         style: const TextStyle(fontSize: 18)),
                     const Divider(),
                   ],

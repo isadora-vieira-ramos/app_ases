@@ -1,8 +1,12 @@
+import 'package:app_ases/models/flight_info.dart';
+import 'package:app_ases/models/user.dart';
 import 'package:app_ases/screens/welcome_carousel.dart'; // Certifique-se de importar a tela correta.
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+  FlightInfo flightInfo;
+  UserType userType;
+  Profile({super.key, required this.flightInfo, required this.userType});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class Profile extends StatelessWidget {
                   color: Colors.grey.withOpacity(0.5),
                   spreadRadius: 2,
                   blurRadius: 5,
-                  offset: Offset(0, 3),
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
@@ -39,7 +43,7 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(
+                const Text(
                   'Nome:',
                   style: TextStyle(
                     fontSize: 17,
@@ -56,11 +60,11 @@ class Profile extends StatelessWidget {
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Ex. Maria Teresinha Silva",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                     ),
                   ),
                 ),
-                Text(
+                const Text(
                   'Telefone:',
                   style: TextStyle(
                     fontSize: 17,
@@ -77,11 +81,11 @@ class Profile extends StatelessWidget {
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Digite o segundo campo...",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                     ),
                   ),
                 ),
-                Text(
+                const Text(
                   'Endereço:',
                   style: TextStyle(
                     fontSize: 17,
@@ -105,7 +109,7 @@ class Profile extends StatelessWidget {
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Center(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -114,7 +118,10 @@ class Profile extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const WelcomeCarousel(),
+                      builder: (context) => WelcomeCarousel(
+                        flightInfo: flightInfo,
+                        userType: userType,
+                      ),
                     ),
                   );
                 },
