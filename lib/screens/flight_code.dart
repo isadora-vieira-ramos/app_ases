@@ -146,9 +146,6 @@ class FlightCode extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flight Code'),
-      ),
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
         child: Padding(

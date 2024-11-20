@@ -16,13 +16,6 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FlightInfo flightInfo;
-    @override
-    initState() async {
-      super.initState();
-      flightInfo = await flightService.fetchFlightInfo();
-    }
-
     void changePositionValue(String value) {
       setState(() {
         currentPosition = value;
