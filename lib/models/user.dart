@@ -30,7 +30,7 @@ class User {
     } else if (userType == UserType.chaperone) {
       return 'Acompanhante';
     } else {
-      return 'Voluntário';
+      return 'Voluntario';
     }
   }
 }

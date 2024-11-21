@@ -3,15 +3,16 @@ import 'package:app_ases/services/flight_service.dart';
 import 'package:app_ases/utils/action_bar.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class MonitorFlightScreen extends StatefulWidget {
-  const MonitorFlightScreen({super.key});
+  FlightInfo flightInfo;
+  MonitorFlightScreen({super.key, required this.flightInfo});
 
   @override
   State<MonitorFlightScreen> createState() => _MonitorFlightScreenState();
 }
 
 class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
-  final FlightService flightService = FlightService();
   String currentPosition = "";
 
   @override
@@ -32,7 +33,7 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
 
     return Column(
       children: [
-        ActionBar(takePhoto: false, updatePosition: changePositionValue),
+        ActionBar(takePhoto: false, updatePosition: changePositionValue, flightInfo: widget.flightInfo),
         const SizedBox(height: 16),
         Center(
           child: Container(

@@ -10,7 +10,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 class ActionBar extends StatefulWidget {
   final bool takePhoto;
   Function updatePosition;
-  ActionBar({super.key, required this.takePhoto, required this.updatePosition});
+  FlightInfo flightInfo;
+  ActionBar({super.key, required this.takePhoto, required this.updatePosition, required this.flightInfo});
 
   static List<String> positionList = <String>[
     'Em deslocamento até aeroporto',
@@ -65,8 +66,6 @@ class _ActionBarState extends State<ActionBar> {
 
     void showFlightInfoModal() async {
       try {
-        FlightInfo? flightInfo =
-            await flightService.fetchFlightInfo(UserType.volunteer, '1234');
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -75,9 +74,9 @@ class _ActionBarState extends State<ActionBar> {
               content: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Image.network(flightInfo!.volunteers[0].photo, height: 100),
+                    Image.network(widget.flightInfo.volunteers[0].photo, height: 100),
                     const SizedBox(height: 8),
-                    Text(flightInfo!.volunteers[0].name,
+                    Text(widget.flightInfo.volunteers[0].name,
                         style: const TextStyle(fontSize: 18)),
                     const Divider(),
                   ],

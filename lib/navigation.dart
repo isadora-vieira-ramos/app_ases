@@ -20,8 +20,8 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-      const Home(),
-      const MonitorFlightScreen(),
+      Home(flightInfo: widget.flightInfo),
+      MonitorFlightScreen(flightInfo: widget.flightInfo),
       Profile(
         flightInfo: widget.flightInfo,
         userType: widget.userType,
