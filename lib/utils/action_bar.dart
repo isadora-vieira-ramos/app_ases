@@ -9,17 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class ActionBar extends StatefulWidget {
   final bool takePhoto;
-  Function updatePosition;
   FlightInfo flightInfo;
-  ActionBar({super.key, required this.takePhoto, required this.updatePosition, required this.flightInfo});
-
-  static List<String> positionList = <String>[
-    'Em deslocamento até aeroporto',
-    'Embarque',
-    'Em voo',
-    'Em deslocamento até hospital',
-    'Chegada'
-  ];
+  ActionBar({super.key, required this.takePhoto, required this.flightInfo});
 
   @override
   State<ActionBar> createState() => _ActionBarState();
@@ -115,53 +106,6 @@ class _ActionBarState extends State<ActionBar> {
       }
     }
 
-    void sendPosition() {
-      String currentPosition = "";
-      AlertDialog alert = AlertDialog(
-        title: const Text("Qual a sua posição?",
-            style: TextStyle(
-              fontSize: 17,
-            )),
-        content: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: DropdownMenu<String>(
-              initialSelection: ActionBar.positionList.first,
-              onSelected: (value) {
-                setState(() {
-                  currentPosition = value!;
-                });
-              },
-              dropdownMenuEntries: ActionBar.positionList
-                  .map<DropdownMenuEntry<String>>((String value) {
-                return DropdownMenuEntry<String>(value: value, label: value);
-              }).toList()),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-                backgroundColor: Colors.red, foregroundColor: Colors.white),
-            child: const Text("Cancelar"),
-            onPressed: () => Navigator.pop(context),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white),
-            child: const Text("OK"),
-            onPressed: () {
-              widget.updatePosition(currentPosition);
-              Navigator.pop(context);
-            },
-          )
-        ],
-      );
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          });
-    }
-
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -204,7 +148,7 @@ class _ActionBarState extends State<ActionBar> {
                   )),
             ],
             GestureDetector(
-                onTap: sendPosition,
+                onTap: (){},
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,

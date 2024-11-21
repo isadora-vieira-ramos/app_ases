@@ -12,7 +12,7 @@ class Home extends StatelessWidget {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [ActionBar(takePhoto: true, updatePosition: () {}, flightInfo: flightInfo)],
+      children: [ActionBar(takePhoto: true, flightInfo: flightInfo)],
     ));
   }
 }

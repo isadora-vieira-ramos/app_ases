@@ -17,23 +17,10 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
 
   @override
   Widget build(BuildContext context) {
-    void changePositionValue(String value) {
-      setState(() {
-        currentPosition = value;
-      });
-    }
-
-    int getIndexInList(String value) {
-      if (value.isEmpty) {
-        return 0;
-      } else {
-        return ActionBar.positionList.indexOf(value);
-      }
-    }
 
     return Column(
       children: [
-        ActionBar(takePhoto: false, updatePosition: changePositionValue, flightInfo: widget.flightInfo),
+        ActionBar(takePhoto: false, flightInfo: widget.flightInfo),
         const SizedBox(height: 16),
         Center(
           child: Container(
@@ -73,54 +60,9 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
                 ),
               ],
             ),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Ponto de Encontro:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  "Hospital Santa Casa - POA/RS\n24 de outubro, às 18h",
-                  style: TextStyle(fontSize: 16),
-                ),
-                Expanded(
-                    child: Stepper(
-                        currentStep: getIndexInList(currentPosition),
-                        controlsBuilder:
-                            (BuildContext context, ControlsDetails details) {
-                          return Row(
-                            children: <Widget>[
-                              Container(
-                                child: null,
-                              ),
-                              Container(
-                                child: null,
-                              ),
-                            ],
-                          );
-                        },
-                        steps: ActionBar.positionList.map<Step>((String value) {
-                          return Step(
-                              title: Text(value),
-                              content: Container(child: null),
-                              stepStyle: StepStyle(
-                                color: getIndexInList(value) <=
-                                        getIndexInList(currentPosition)
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.grey,
-                              ));
-                        }).toList())),
-                const Text(
-                  "Ponto de Chegada:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  "Hospital Santa Isabel - SAO/SP\n24 de outubro, às 21h",
-                  style: TextStyle(fontSize: 16),
-                ),
               ],
             ),
           ),
