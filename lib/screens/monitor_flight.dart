@@ -1,11 +1,10 @@
 import 'package:app_ases/models/flight_info.dart';
-import 'package:app_ases/services/flight_service.dart';
 import 'package:app_ases/utils/action_bar.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class MonitorFlightScreen extends StatefulWidget {
-  FlightInfo flightInfo;
+  final FlightInfo flightInfo;
+
   MonitorFlightScreen({super.key, required this.flightInfo});
 
   @override
@@ -13,29 +12,31 @@ class MonitorFlightScreen extends StatefulWidget {
 }
 
 class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
-  String currentPosition = "";
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Barra de ação do topo
         ActionBar(takePhoto: false, flightInfo: widget.flightInfo),
         const SizedBox(height: 16),
+
+        // Mensagem de conexão à internet
         Center(
           child: Container(
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 6,
-                    offset: Offset(0, 2),
-                  ),
-                ]),
+              color: const Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 6,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
             child: const Padding(
-              padding: EdgeInsets.only(left: 20.0, right: 20.0),
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
                 "Você está conectado a internet!",
                 style: TextStyle(fontSize: 16, color: Colors.green),
@@ -44,6 +45,8 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
           ),
         ),
         const SizedBox(height: 16),
+
+        // Conteúdo com Stepper
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(16.0),
@@ -62,31 +65,73 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Stepper(
+                // Título do conteúdo
+                const Text(
+                  "Deslocamento do passageiro",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  "Informações sobre os trechos.",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color.fromARGB(255, 140, 146, 151),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Stepper adaptado
+                Expanded(
+                  child: Stepper(
+                    type: StepperType.vertical,
                     controlsBuilder:
                         (BuildContext context, ControlsDetails details) {
-                      return Row(
-                        children: <Widget>[
-                          Container(
-                            child: null,
-                          ),
-                          Container(
-                            child: null,
-                          ),
-                        ],
-                      );
+                      return const SizedBox.shrink(); // Remove os botões padrão
                     },
                     steps: widget.flightInfo.stretchs
-                        .map<Step>((stretch) => Step(
-                            stepStyle: StepStyle(
-                                color: Theme.of(context).primaryColor,
-                                connectorColor: Theme.of(context).primaryColor),
-                            title: Text(stretch.stretchName),
-                            content: const Text(''),
-                            subtitle: const Column(
-                              children: [Text("Mudar aqui")],
-                            )))
-                        .toList())
+                        .asMap()
+                        .entries
+                        .map<Step>((entry) {
+                      int index = entry.key;
+                      var stretch = entry.value;
+
+                      // Selecionar ícone conforme etapa
+                      IconData stepIcon;
+                      if (index == 0 || index == 3) {
+                        stepIcon =
+                            Icons.directions_car; // Carro para etapas 1 e 4
+                      } else {
+                        stepIcon = Icons.flight; // Avião para etapas 2 e 3
+                      }
+
+                      return Step(
+                        isActive: true,
+                        state: StepState.indexed,
+                        title: Row(
+                          children: [
+                            Icon(
+                              stepIcon,
+                              color: const Color.fromARGB(255, 189, 200, 209),
+                              size: 24,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              stretch.stretchName,
+                              style: const TextStyle(),
+                            ),
+                          ],
+                        ),
+                        subtitle: const Text("Status: em andamento"),
+                        content: Text(
+                          "Informações detalhadas sobre o trecho ${stretch.stretchName}.",
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ],
             ),
           ),
