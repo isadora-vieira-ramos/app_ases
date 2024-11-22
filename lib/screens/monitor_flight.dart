@@ -17,7 +17,6 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         ActionBar(takePhoto: false, flightInfo: widget.flightInfo),
@@ -60,9 +59,34 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
                 ),
               ],
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Stepper(
+                    controlsBuilder:
+                        (BuildContext context, ControlsDetails details) {
+                      return Row(
+                        children: <Widget>[
+                          Container(
+                            child: null,
+                          ),
+                          Container(
+                            child: null,
+                          ),
+                        ],
+                      );
+                    },
+                    steps: widget.flightInfo.stretchs
+                        .map<Step>((stretch) => Step(
+                            stepStyle: StepStyle(
+                                color: Theme.of(context).primaryColor,
+                                connectorColor: Theme.of(context).primaryColor),
+                            title: Text(stretch.stretchName),
+                            content: const Text(''),
+                            subtitle: const Column(
+                              children: [Text("Mudar aqui")],
+                            )))
+                        .toList())
               ],
             ),
           ),
