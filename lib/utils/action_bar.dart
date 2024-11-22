@@ -1,4 +1,5 @@
 import 'package:app_ases/models/flight_info.dart';
+import 'package:app_ases/models/user.dart';
 import 'package:app_ases/screens/flight_code.dart';
 import 'package:app_ases/services/flight_service.dart';
 import 'package:flutter/material.dart';
@@ -8,16 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class ActionBar extends StatefulWidget {
   final bool takePhoto;
-  Function updatePosition;
-  ActionBar({super.key, required this.takePhoto, required this.updatePosition});
-
-  static List<String> positionList = <String>[
-    'Em deslocamento até aeroporto',
-    'Embarque',
-    'Em voo',
-    'Em deslocamento até hospital',
-    'Chegada'
-  ];
+  FlightInfo flightInfo;
+  ActionBar({super.key, required this.takePhoto, required this.flightInfo});
 
   @override
   State<ActionBar> createState() => _ActionBarState();
@@ -64,7 +57,6 @@ class _ActionBarState extends State<ActionBar> {
 
     void showFlightInfoModal() async {
       try {
-        FlightInfo flightInfo = await flightService.fetchFlightInfo();
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -73,9 +65,9 @@ class _ActionBarState extends State<ActionBar> {
               content: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Image.network(flightInfo.pilotPhoto, height: 100),
+                    Image.network(widget.flightInfo.volunteers[0].photo, height: 100),
                     const SizedBox(height: 8),
-                    Text(flightInfo.pilotName,
+                    Text(widget.flightInfo.volunteers[0].name,
                         style: const TextStyle(fontSize: 18)),
                     const Divider(),
                   ],
@@ -112,53 +104,6 @@ class _ActionBarState extends State<ActionBar> {
           },
         );
       }
-    }
-
-    void sendPosition() {
-      String currentPosition = "";
-      AlertDialog alert = AlertDialog(
-        title: const Text("Qual a sua posição?",
-            style: TextStyle(
-              fontSize: 17,
-            )),
-        content: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: DropdownMenu<String>(
-              initialSelection: ActionBar.positionList.first,
-              onSelected: (value) {
-                setState(() {
-                  currentPosition = value!;
-                });
-              },
-              dropdownMenuEntries: ActionBar.positionList
-                  .map<DropdownMenuEntry<String>>((String value) {
-                return DropdownMenuEntry<String>(value: value, label: value);
-              }).toList()),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-                backgroundColor: Colors.red, foregroundColor: Colors.white),
-            child: const Text("Cancelar"),
-            onPressed: () => Navigator.pop(context),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white),
-            child: const Text("OK"),
-            onPressed: () {
-              widget.updatePosition(currentPosition);
-              Navigator.pop(context);
-            },
-          )
-        ],
-      );
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          });
     }
 
     return Container(
@@ -203,7 +148,7 @@ class _ActionBarState extends State<ActionBar> {
                   )),
             ],
             GestureDetector(
-                onTap: sendPosition,
+                onTap: (){},
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
