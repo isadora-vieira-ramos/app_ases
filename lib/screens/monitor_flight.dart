@@ -12,6 +12,8 @@ class MonitorFlightScreen extends StatefulWidget {
 }
 
 class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
+  int currentIndexStep = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -75,37 +77,31 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  "Informações sobre os trechos.",
+                  "Clique no trecho para visualizar suas informações.",
                   style: TextStyle(
                     fontSize: 16,
                     color: Color.fromARGB(255, 140, 146, 151),
                   ),
                 ),
-                const SizedBox(height: 16),
-
                 // Stepper adaptado
                 Expanded(
                   child: Stepper(
                     type: StepperType.vertical,
+                    currentStep: currentIndexStep,
                     controlsBuilder:
                         (BuildContext context, ControlsDetails details) {
                       return const SizedBox.shrink(); // Remove os botões padrão
+                    },
+                    onStepTapped: (value) {
+                      setState(() {
+                        currentIndexStep = value;
+                      });
                     },
                     steps: widget.flightInfo.stretchs
                         .asMap()
                         .entries
                         .map<Step>((entry) {
-                      int index = entry.key;
                       var stretch = entry.value;
-
-                      // Selecionar ícone conforme etapa
-                      IconData stepIcon;
-                      if (index == 0 || index == 3) {
-                        stepIcon =
-                            Icons.directions_car; // Carro para etapas 1 e 4
-                      } else {
-                        stepIcon = Icons.flight; // Avião para etapas 2 e 3
-                      }
 
                       return Step(
                         isActive: true,
@@ -113,7 +109,7 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
                         title: Row(
                           children: [
                             Icon(
-                              stepIcon,
+                              stretch.type.toLowerCase().contains("carro")? Icons.directions_car: Icons.flight,
                               color: const Color.fromARGB(255, 189, 200, 209),
                               size: 24,
                             ),
@@ -124,9 +120,21 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
                             ),
                           ],
                         ),
-                        subtitle: const Text("Status: em andamento"),
-                        content: Text(
-                          "Informações detalhadas sobre o trecho ${stretch.stretchName}.",
+                        subtitle: Text("Distância percorrida no trecho: ${stretch.distance} KM"),
+                        content: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Origem: ${stretch.origin}"),
+                              Text("Destino: ${stretch.destination}"),
+                              Text("Duração do trecho: ${stretch.duration}"),
+                              if(stretch.type.toLowerCase() != "carro")...{
+                                Text("Companhia aérea: ${stretch.flightCompany}"),
+                                Text("Voo: ${stretch.flight}")
+                              }
+                            ],
+                          ),
                         ),
                       );
                     }).toList(),
