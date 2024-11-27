@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 class Profile extends StatelessWidget {
   FlightInfo flightInfo;
   UserType userType;
-  Profile({super.key, required this.flightInfo, required this.userType});
+  String flightCode;
+  Profile({super.key, required this.flightInfo, required this.userType, required this.flightCode});
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +122,7 @@ class Profile extends StatelessWidget {
                       builder: (context) => WelcomeCarousel(
                         flightInfo: flightInfo,
                         userType: userType,
+                        flightCode: flightCode,
                       ),
                     ),
                   );

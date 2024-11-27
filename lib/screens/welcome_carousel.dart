@@ -7,8 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 class WelcomeCarousel extends StatefulWidget {
   FlightInfo flightInfo;
   UserType userType;
+  String flightCode;
   WelcomeCarousel(
-      {super.key, required this.flightInfo, required this.userType});
+      {super.key, required this.flightInfo, required this.userType, required this.flightCode});
 
   @override
   WelcomeCarouselState createState() => WelcomeCarouselState();
@@ -145,7 +146,8 @@ class WelcomeCarouselState extends State<WelcomeCarousel> {
                       MaterialPageRoute(
                           builder: (context) => Navigation(
                               flightInfo: widget.flightInfo,
-                              userType: widget.userType)),
+                              userType: widget.userType,
+                              flightCode: widget.flightCode,)),
                     );
                   },
                   child: Text(

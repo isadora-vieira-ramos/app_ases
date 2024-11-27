@@ -106,7 +106,8 @@ class _FlightCodeState extends State<FlightCode> {
                     MaterialPageRoute(
                         builder: (context) => WelcomeCarousel(
                             flightInfo: flightInfo!,
-                            userType: User.getUserType(selectedValue!))),
+                            userType: User.getUserTypeWithDescription(selectedValue!),
+                            flightCode: flightCode!)),
                   );
                 } else {
                   Navigator.of(context).pop();
@@ -115,7 +116,8 @@ class _FlightCodeState extends State<FlightCode> {
                     MaterialPageRoute(
                         builder: (context) => Navigation(
                             flightInfo: flightInfo!,
-                            userType: User.getUserType(selectedValue!))),
+                            userType: User.getUserTypeWithDescription(selectedValue!),
+                            flightCode: flightCode!)),
                   );
                 }
               },
@@ -158,7 +160,7 @@ class _FlightCodeState extends State<FlightCode> {
         errorMessage = 'Por favor, preencha todos os campos.';
       });
     } else {
-      var currentUser = User.getUserType(selectedValue!);
+      var currentUser = User.getUserTypeWithDescription(selectedValue!);
 
       flightInfo = await service.fetchFlightInfo(currentUser, flightCode!);
       if (flightInfo != null) {

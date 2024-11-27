@@ -1,11 +1,13 @@
 import 'package:app_ases/models/flight_info.dart';
+import 'package:app_ases/models/user.dart';
 import 'package:app_ases/utils/action_bar.dart';
 import 'package:flutter/material.dart';
 
 class MonitorFlightScreen extends StatefulWidget {
   final FlightInfo flightInfo;
-
-  MonitorFlightScreen({super.key, required this.flightInfo});
+  final UserType userType;
+  final String flightCode;
+  MonitorFlightScreen({super.key, required this.flightInfo, required this.userType, required this.flightCode});
 
   @override
   State<MonitorFlightScreen> createState() => _MonitorFlightScreenState();
@@ -19,7 +21,7 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
     return Column(
       children: [
         // Barra de ação do topo
-        ActionBar(takePhoto: false, flightInfo: widget.flightInfo),
+        ActionBar(takePhoto: false, flightInfo: widget.flightInfo, userType: widget.userType, flightCode: widget.flightCode),
         const SizedBox(height: 16),
 
         // Mensagem de conexão à internet

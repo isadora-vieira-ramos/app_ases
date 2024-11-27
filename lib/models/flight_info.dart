@@ -1,10 +1,10 @@
-class ResponseJson {
+class FlightResponseJson {
   final FlightInfo flightInfo;
 
-  ResponseJson({required this.flightInfo});
+  FlightResponseJson({required this.flightInfo});
 
-  factory ResponseJson.fromJson(Map<String, dynamic> json) {
-    return ResponseJson(
+  factory FlightResponseJson.fromJson(Map<String, dynamic> json) {
+    return FlightResponseJson(
       flightInfo: FlightInfo.fromJson(json['ACIONAMENTO']),
     );
   }
