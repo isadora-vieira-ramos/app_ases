@@ -2,7 +2,6 @@ class User {
   final String name;
   final UserType type;
   String flightInfo;
-  late int currentPosition;
 
   User(
       {required this.name,

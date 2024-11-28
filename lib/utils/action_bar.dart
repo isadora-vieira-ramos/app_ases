@@ -27,6 +27,7 @@ class _ActionBarState extends State<ActionBar> {
   final FlightService flightService = FlightService();
   final ImagePicker _picker = ImagePicker();
   String updateMessage ="";
+  Position? position;
 
   Future<void> _pickImage(BuildContext context) async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -49,6 +50,15 @@ class _ActionBarState extends State<ActionBar> {
           textColor: Colors.white,
         );
       }
+    }
+  }
+
+  bool distanceBetweenTwoPoints(double startLatitude, double startLongitude, double endLatitude, double endLongitude){
+    var distanceInMeters = _geolocatorPlatform.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
+    if(distanceInMeters > 555){ //verifica se a distância é maior que 0,3 milhas
+      return true;
+    }else{
+      return false;
     }
   }
 
@@ -93,28 +103,8 @@ class _ActionBarState extends State<ActionBar> {
               foregroundColor: Colors.white),
           child: const Text("OK"),
           onPressed: () async {
-            final geolocatorPosition = await _geolocatorPlatform.getCurrentPosition();
             int stretchIndex = stretchList.indexOf(currentStretch) + 1;
-            
-            Position position = Position(
-              userType: widget.userType, 
-              flightCode: widget.flightCode,
-              flightId: widget.flightInfo.id,
-              stretch: stretchIndex,
-              date: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-              latitude: geolocatorPosition.latitude.toString().contains("-")? geolocatorPosition.latitude.toString(): "-${geolocatorPosition.latitude}",
-              longitude: geolocatorPosition.longitude.toString().contains("-")? geolocatorPosition.longitude.toString(): "-${geolocatorPosition.longitude}",
-              speed: geolocatorPosition.speed,
-              altitude: geolocatorPosition.altitude
-            );
-            var result = await flightService.sendPosition(position);
-            if(result){
-              updateMessage = "Atualizado com sucesso!";
-            }else{
-              updateMessage = "Não foi possível atualizar. Tente novamente";
-            }
-            Navigator.pop(context);
-            showSnackBar(updateMessage);
+            sendPositionToAPI(stretchIndex);
           },
         )
       ],
@@ -124,6 +114,44 @@ class _ActionBarState extends State<ActionBar> {
         builder: (BuildContext context) {
           return alert;
         });
+  }
+
+  void sendPositionToAPI(int stretchIndex)async{
+    final geolocatorPosition = await _geolocatorPlatform.getCurrentPosition();
+    
+    if(position != null){
+      double startLatitude = double.parse(position!.latitude);
+      double startLongitude = double.parse(position!.longitude);
+      
+      bool isDistanceSignificative = distanceBetweenTwoPoints(
+        startLatitude, startLongitude, geolocatorPosition.latitude, geolocatorPosition.longitude);
+
+      if(!isDistanceSignificative){
+        Navigator.pop(context);
+        showSnackBar("Distância entre o último ponto enviado e o atual é bem curta. Espere um pouco para enviar novamente.");
+        return;
+      }
+    }
+
+    position = Position(
+      userType: widget.userType, 
+      flightCode: widget.flightCode,
+      flightId: widget.flightInfo.id,
+      stretch: stretchIndex,
+      date: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+      latitude: geolocatorPosition.latitude.toString(),
+      longitude: geolocatorPosition.longitude.toString(),
+      speed: geolocatorPosition.speed,
+      altitude: geolocatorPosition.altitude
+    );
+    var result = await flightService.sendPosition(position!);
+    if(result){
+      updateMessage = "Atualizado com sucesso!";
+    }else{
+      updateMessage = "Não foi possível atualizar. Tente novamente";
+    }
+    Navigator.pop(context);
+    showSnackBar(updateMessage);
   }
 
   showSnackBar(String message){
