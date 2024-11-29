@@ -77,6 +77,30 @@ class FlightService {
     }catch(e){
       return false;
     }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchMessages(UserType userType, FlightInfo flightInfo, String userCode, int origemId) async {
+    var type = User.getUserTypeDescription(userType).toUpperCase();
     
+    final response = await http.post(
+      Uri.parse('${dotenv.env['API_URL'].toString()}$getMessagesEndpoint'), // URL correta
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "TOKEN": dotenv.env['TOKEN'].toString(),
+        "TIPO": type,
+        "CODIGO": userCode,
+        "ACIONAMENTO_ID": flightInfo.bookingCode,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+        // Filtrando mensagens pelo ORIGEM_ID
+        return List<Map<String, dynamic>>.from(data['MENSAGEMS'])
+            .where((message) => message['ORIGEM_ID'] == origemId)
+            .toList();
+    } else {
+      return List<Map<String, dynamic>>.empty();
+    }
   }
 }
