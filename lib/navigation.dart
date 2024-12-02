@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 class Navigation extends StatefulWidget {
   FlightInfo flightInfo;
   UserType userType;
-  Navigation({super.key, required this.flightInfo, required this.userType});
+  String flightCode;
+  Navigation({super.key, required this.flightInfo, required this.userType, required this.flightCode});
 
   @override
   State<Navigation> createState() => _NavigationState();
@@ -20,11 +21,19 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-      Home(flightInfo: widget.flightInfo),
-      MonitorFlightScreen(flightInfo: widget.flightInfo),
+      Home(flightInfo: widget.flightInfo,
+      userType: widget.userType,
+      flightCode: widget.flightCode
+      ),
+      MonitorFlightScreen(
+        flightInfo: widget.flightInfo, 
+        userType: widget.userType,
+        flightCode: widget.flightCode,
+      ),
       Profile(
         flightInfo: widget.flightInfo,
         userType: widget.userType,
+        flightCode: widget.flightCode,
       ),
     ];
 

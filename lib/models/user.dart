@@ -1,20 +1,18 @@
 class User {
   final String name;
   final UserType type;
-  final String telephone;
-  final String address;
+  String flightInfo;
 
   User(
       {required this.name,
       required this.type,
-      required this.telephone,
-      required this.address});
+      required this.flightInfo});
 
   getUserName() {
     return name;
   }
 
-  static UserType getUserType(String userType) {
+  static UserType getUserTypeWithDescription(String userType) {
     if (userType == 'Paciente') {
       return UserType.patient;
     } else if (userType == 'Acompanhante') {
