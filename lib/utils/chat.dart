@@ -1,10 +1,8 @@
 import 'package:app_ases/services/flight_service.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:app_ases/models/flight_info.dart';
-import 'package:app_ases/utils/action_bar.dart';
-import 'package:app_ases/screens/flight_code.dart';
 
 class ChatWidget extends StatefulWidget {
   final String apiUrl;
@@ -13,7 +11,8 @@ class ChatWidget extends StatefulWidget {
   final int acionamentoId;
   final int origemId; // Adicionado para filtrar mensagens por ORIGEM_ID
 
-  const ChatWidget({super.key, 
+  const ChatWidget({
+    super.key,
     required this.apiUrl,
     required this.token,
     required this.codigo,
@@ -37,15 +36,17 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   Future<void> fetchMessages() async {
+    var json = jsonEncode({
+      "TOKEN": widget.token,
+      "TIPO": "PACIENTE",
+      "CODIGO": widget.codigo,
+      "ACIONAMENTO_ID": widget.acionamentoId,
+    });
+
     final response = await http.post(
       Uri.parse('${widget.apiUrl}/api_get_messages/index.php'), // URL correta
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        "TOKEN": widget.token,
-        "TIPO": "PACIENTE",
-        "CODIGO": widget.codigo,
-        "ACIONAMENTO_ID": widget.acionamentoId,
-      }),
+      body: json,
     );
 
     if (response.statusCode == 200) {
@@ -62,33 +63,33 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   Future<void> deleteMessage(int messageId) async {
-  final response = await http.post(
-    Uri.parse('${widget.apiUrl}/api_delete_message/index.php'), // Atualizar para o endpoint correto
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({
-      "TOKEN": widget.token,
-      "TIPO": "PACIENTE",
-      "CODIGO": widget.codigo,
-      "ACIONAMENTO_ID": widget.acionamentoId,
-      "MENSAGEM_ID": messageId, // ID da mensagem a ser excluída
-    }),
-  );
+    final response = await http.post(
+      Uri.parse(
+          '${widget.apiUrl}/api_delete_message/index.php'), // Atualizar para o endpoint correto
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "TOKEN": widget.token,
+        "TIPO": "PACIENTE",
+        "CODIGO": widget.codigo,
+        "ACIONAMENTO_ID": widget.acionamentoId,
+        "MENSAGEM_ID": messageId, // ID da mensagem a ser excluída
+      }),
+    );
 
-  if (response.statusCode == 200) {
-    final result = jsonDecode(response.body);
-    if (result['STATUS'] == 200) {
-      setState(() {
-        messages.removeWhere((message) => message['ID'] == messageId);
-      });
-      print('Mensagem deletada com sucesso.');
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      if (result['STATUS'] == 200) {
+        setState(() {
+          messages.removeWhere((message) => message['ID'] == messageId);
+        });
+        print('Mensagem deletada com sucesso.');
+      } else {
+        print('Erro: ${result['MESSAGE']}');
+      }
     } else {
-      print('Erro: ${result['MESSAGE']}');
+      print('Erro ao deletar a mensagem.');
     }
-  } else {
-    print('Erro ao deletar a mensagem.');
   }
-}
-
 
   Future<void> sendMessage(String message) async {
     final response = await http.post(
@@ -114,84 +115,122 @@ class _ChatWidgetState extends State<ChatWidget> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: messages.length,
-            itemBuilder: (context, index) {
-              final message = messages[index];
-              return ListTile(
-                title: Text(message['MENSAGEM'] ?? 'No message'),
-                subtitle: Text('Enviado por: ${message['ORIGEM'] ?? 'Desconhecido'}'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      message['DATA_HORA'] ?? '',
-                      style: const TextStyle(fontSize: 10, color: Colors.grey),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        // Confirmar a exclusão
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Confirmação'),
-                            content: const Text('Deseja realmente excluir esta mensagem?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Cancelar'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  deleteMessage(message['ID']);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Excluir'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+    return Padding(
+      padding: const EdgeInsets.only(right: 20, left: 20, top: 20, bottom: 20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 2),
+            ),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: messageController,
-                  decoration: const InputDecoration(
-                    labelText: 'Digite sua mensagem...',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: () {
-                  if (messageController.text.isNotEmpty) {
-                    sendMessage(messageController.text);
-                  }
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Chat",
+                  style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.primary),
+                  textAlign: TextAlign.left),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[index];
+                  return ListTile(
+                    title: Text(message['MENSAGEM'] ?? 'No message'),
+                    subtitle: Text(
+                        'Enviado por: ${message['ORIGEM'] ?? 'Desconhecido'}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          message['DATA_HORA'] ?? '',
+                          style:
+                              const TextStyle(fontSize: 10, color: Colors.grey),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            // Confirmar a exclusão
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Confirmação'),
+                                content: const Text(
+                                    'Deseja realmente excluir esta mensagem?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      deleteMessage(message['ID']);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Excluir'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: messageController,
+                      decoration: InputDecoration(
+                        labelText: 'Digite sua mensagem...',
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add_photo_alternate,
+                        color: Theme.of(context).colorScheme.primary),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.send,
+                        color: Theme.of(context).colorScheme.primary),
+                    onPressed: () {
+                      if (messageController.text.isNotEmpty) {
+                        sendMessage(messageController.text);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
