@@ -81,8 +81,8 @@ class FlightService {
     }
   }
 
-  Future<Map<String, dynamic>?> sendImage(UserType userType, String flightCode,
-      FlightInfo flightInfo, String base64Image, int stretch) async {
+  Future<http.Response> sendMessageAndPhoto(UserType userType, String flightCode,
+      FlightInfo flightInfo, String base64Image, String message, int stretch) async {
     final String apiUrl =
         '${dotenv.env['API_URL'].toString()}$sendMessageOrPhotoEndpoint';
 
@@ -91,35 +91,25 @@ class FlightService {
       'TIPO': User.getUserTypeDescription(userType).toUpperCase(),
       'CODIGO': flightCode,
       'ACIONAMENTO_ID': flightInfo.id,
-      'TRECHO': stretch, //inlcluir verdadeiro trecho
+      'TRECHO': stretch,
       'DATA_COLETA': DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-      'MENSAGEM': 'FOTO',
-      'IMAGEM': base64Image,
+      'MENSAGEM': message.isEmpty ? 'FOTO' : message,
+      'FOTO': base64Image.isEmpty ? 'MENSAGEM' : base64Image,
     };
-
-    try {
-      var body = json.encode(payload);
-      var response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-        dynamic jsonResponse = json.decode(response.body);
-        return jsonResponse;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return null;
-    }
+      
+    var body = json.encode(payload);
+    var response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
+    return response;
   }
 
-  Future<List<Map<String, dynamic>>> fetchMessages(UserType userType,
-      FlightInfo flightInfo, String userCode, int origemId) async {
+  Future<http.Response> fetchMessages(UserType userType,
+    FlightInfo flightInfo, String userCode, int origemId) async {
     var type = User.getUserTypeDescription(userType).toUpperCase();
 
     final response = await http.post(
@@ -130,18 +120,12 @@ class FlightService {
         "TOKEN": dotenv.env['TOKEN'].toString(),
         "TIPO": type,
         "CODIGO": userCode,
-        "ACIONAMENTO_ID": flightInfo.bookingCode,
+        "ACIONAMENTO_ID": flightInfo.id,
       }),
     );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      // Filtrando mensagens pelo ORIGEM_ID
-      return List<Map<String, dynamic>>.from(data['MENSAGEMS'])
-          .where((message) => message['ORIGEM_ID'] == origemId)
-          .toList();
-    } else {
-      return List<Map<String, dynamic>>.empty();
-    }
+    return response;
   }
+
+
 }

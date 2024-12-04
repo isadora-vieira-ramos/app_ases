@@ -1,22 +1,26 @@
+import 'package:app_ases/models/flight_info.dart';
+import 'package:app_ases/models/user.dart';
 import 'package:app_ases/services/flight_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:image_picker/image_picker.dart';
+
 class ChatWidget extends StatefulWidget {
-  final String apiUrl;
-  final String token;
-  final String codigo;
-  final int acionamentoId;
+  final UserType userType;
+  final String userCode;
+  final FlightInfo flightInfo;
   final int origemId; // Adicionado para filtrar mensagens por ORIGEM_ID
 
   const ChatWidget({
     super.key,
-    required this.apiUrl,
-    required this.token,
-    required this.codigo,
-    required this.acionamentoId,
+    required this.userType,
+    required this.userCode,
+    required this.flightInfo,
     required this.origemId,
   });
 
@@ -27,8 +31,10 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   List<Map<String, dynamic>> messages = [];
   FlightService flightService = FlightService();
+  final ImagePicker picker = ImagePicker();
   TextEditingController messageController = TextEditingController();
-
+  String currentLoadedImage = "";
+  
   @override
   void initState() {
     super.initState();
@@ -36,18 +42,9 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   Future<void> fetchMessages() async {
-    var json = jsonEncode({
-      "TOKEN": widget.token,
-      "TIPO": "PACIENTE",
-      "CODIGO": widget.codigo,
-      "ACIONAMENTO_ID": widget.acionamentoId,
-    });
-
-    final response = await http.post(
-      Uri.parse('${widget.apiUrl}/api_get_messages/index.php'), // URL correta
-      headers: {'Content-Type': 'application/json'},
-      body: json,
-    );
+    final response = await flightService.fetchMessages(
+      widget.userType, widget.flightInfo, 
+      widget.userCode, 9);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -58,20 +55,26 @@ class _ChatWidgetState extends State<ChatWidget> {
             .toList();
       });
     } else {
-      print('Failed to load messages');
+      Fluttertoast.showToast(
+          msg: "Não foi possível carregar as mensagens/fotos",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          textColor: Colors.white,
+        );
     }
   }
 
   Future<void> deleteMessage(int messageId) async {
     final response = await http.post(
       Uri.parse(
-          '${widget.apiUrl}/api_delete_message/index.php'), // Atualizar para o endpoint correto
+          '${dotenv.env['API_URL'].toString()}/api_delete_message/index.php'), // Atualizar para o endpoint correto
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        "TOKEN": widget.token,
+        "TOKEN": dotenv.env['TOKEN'].toString(),
         "TIPO": "PACIENTE",
-        "CODIGO": widget.codigo,
-        "ACIONAMENTO_ID": widget.acionamentoId,
+        "CODIGO": widget.userCode,
+        "ACIONAMENTO_ID": widget.flightInfo.id,
         "MENSAGEM_ID": messageId, // ID da mensagem a ser excluída
       }),
     );
@@ -92,26 +95,48 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   Future<void> sendMessage(String message) async {
-    final response = await http.post(
-      Uri.parse('${widget.apiUrl}/api_send_message/index.php'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        "TOKEN": widget.token,
-        "TIPO": "PACIENTE",
-        "CODIGO": widget.codigo,
-        "ACIONAMENTO_ID": widget.acionamentoId,
-        "TRECHO": 1,
-        "DATA_COLETA": DateTime.now().toIso8601String(),
-        "MENSAGEM": message,
-        "FOTO": "MENSAGEM"
-      }),
-    );
+
+    final response = await flightService.sendMessageAndPhoto(
+      widget.userType, widget.userCode, 
+      widget.flightInfo, currentLoadedImage, message, 1);
 
     if (response.statusCode == 200) {
       messageController.clear();
       fetchMessages(); // Refresh messages after sending
     } else {
-      print('Failed to send message');
+      Fluttertoast.showToast(
+          msg: "Não foi possível enviar a mensagem/foto",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          textColor: Colors.white,
+        );
+    }
+  }
+
+  Future<void> loadImage() async {
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      final String extension = image.name.split('.').last.toLowerCase();
+      if (extension == 'jpg' || extension == 'jpeg' || extension == 'png') {
+        final bytes = await image.readAsBytes();
+        currentLoadedImage = base64Encode(bytes);
+        Fluttertoast.showToast(
+          msg: "Imagem carregada com sucesso. Escreva uma mensagem para enviar junto ou envie só a foto",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          textColor: Colors.white,
+        );
+      }else{
+        Fluttertoast.showToast(
+          msg: "Formato inválido",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          textColor: Colors.white,
+        );
+      }
     }
   }
 
@@ -214,7 +239,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                   IconButton(
                     icon: Icon(Icons.add_photo_alternate,
                         color: Theme.of(context).colorScheme.primary),
-                    onPressed: () {},
+                    onPressed: loadImage,
                   ),
                   IconButton(
                     icon: Icon(Icons.send,

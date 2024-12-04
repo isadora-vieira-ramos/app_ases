@@ -21,10 +21,9 @@ class Home extends StatelessWidget {
         ActionBar(takePhoto: true, flightInfo: flightInfo, userType: userType, flightCode: flightCode),
         Expanded(
           child: ChatWidget(
-            apiUrl: dotenv.env['API_URL'].toString(),
-            token: dotenv.env['TOKEN'].toString(),
-            codigo: "121212",
-            acionamentoId: flightInfo.id,
+            userType: userType,
+            userCode: flightCode,
+            flightInfo: flightInfo,
             origemId: 9, 
           ),
         ),

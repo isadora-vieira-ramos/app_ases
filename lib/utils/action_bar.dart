@@ -1,5 +1,6 @@
 import 'package:app_ases/models/flight_info.dart';
 import 'package:app_ases/models/position.dart';
+import 'package:app_ases/models/requestResponse.dart';
 import 'package:app_ases/models/user.dart';
 import 'package:app_ases/screens/flight_code.dart';
 import 'package:app_ases/services/flight_service.dart';
@@ -45,25 +46,27 @@ class _ActionBarState extends State<ActionBar> {
         final base64Image = base64Encode(bytes);
         int stretch = position == null ? 1 : position!.stretch;
 
-        var response = await flightService.sendImage(widget.userType,
-            widget.flightCode, widget.flightInfo, base64Image, stretch);
+        var response = await flightService.sendMessageAndPhoto(widget.userType,
+            widget.flightCode, widget.flightInfo, base64Image, "", stretch);
+
+        dynamic jsonResponse = json.decode(response.body);
 
         if (response != null) {
-          switch (response['STATUS']) {
+          switch (jsonResponse['status']) {
             case 200:
               Fluttertoast.showToast(
                 msg: "Imagem enviada com sucesso",
-                toastLength: Toast.LENGTH_SHORT,
+                toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
                 backgroundColor: const Color(0xFF64ccf3),
                 textColor: Colors.white,
               );
               break;
             case 404:
-              String errorMessage = response['MESSAGE'] ?? "Erro desconhecido";
+              String errorMessage = jsonResponse['message'] ?? "Erro desconhecido";
               Fluttertoast.showToast(
                 msg: errorMessage,
-                toastLength: Toast.LENGTH_SHORT,
+                toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
                 backgroundColor: const Color(0xFF64ccf3),
                 textColor: Colors.white,
@@ -188,7 +191,7 @@ class _ActionBarState extends State<ActionBar> {
 
       if (!isDistanceSignificative) {
         Navigator.pop(context);
-        showSnackBar(
+        showFlutterToast(
             "Distância entre o último ponto enviado e o atual é bem curta. Espere um pouco para enviar novamente.");
         return;
       }
@@ -211,7 +214,17 @@ class _ActionBarState extends State<ActionBar> {
       updateMessage = "Não foi possível atualizar. Tente novamente";
     }
     Navigator.pop(context);
-    showSnackBar(updateMessage);
+    showFlutterToast(updateMessage);
+  }
+
+  showFlutterToast(String message){
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: const Color(0xFF64ccf3),
+      textColor: Colors.white,
+    );
   }
 
   showSnackBar(String message) {
@@ -267,21 +280,26 @@ class _ActionBarState extends State<ActionBar> {
       );
     }
 
+    Image imageFromBase64String(String base64String) {
+      return Image.memory(base64Decode(base64String), height: 100);
+    }
+
     void showFlightInfoModal() async {
       try {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Informação do Piloto'),
+              title: widget.userType != UserType.volunteer? const Text('Informação do Voluntário') : const Text('Informação do Paciente'),
               content: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Image.network(widget.flightInfo.volunteers[0].photo,
-                        height: 100),
+                    imageFromBase64String(widget.userType != UserType.volunteer? widget.flightInfo.volunteers[0].photo: widget.flightInfo.patient.photo),
                     const SizedBox(height: 8),
-                    Text(widget.flightInfo.volunteers[0].name,
-                        style: const TextStyle(fontSize: 18)),
+                    Text(widget.userType != UserType.volunteer? 
+                    "${widget.flightInfo.volunteers[0].name} - ${widget.flightInfo.volunteers[0].role}" :
+                    widget.flightInfo.patient.name,
+                        style: const TextStyle(fontSize: 15)),
                     const Divider(),
                   ],
                 ),
