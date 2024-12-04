@@ -10,9 +10,8 @@ import 'package:intl/intl.dart';
 class FlightService {
   String chekinEndpoint = '/api_checking/index.php';
   String sendPositionEndpoint = '/api_send_position/index.php';
-  String sendMessageEndpoint = '/api_send_message/index.php';
+  String sendMessageOrPhotoEndpoint = '/api_send_message/index.php';
   String getMessagesEndpoint = '/api_get_messages/index.php';
-  final String sendImageEndpoint = '/sendImage/index.php';
 
   Future<FlightInfo?> fetchFlightInfo(
       UserType userType, String flightCode) async {
@@ -82,10 +81,21 @@ class FlightService {
     }
   }
 
-  Future<Map<String, dynamic>?> sendImageWithPayload(
-      Map<String, dynamic> payload) async {
+  Future<Map<String, dynamic>?> sendImage(UserType userType, String flightCode,
+      FlightInfo flightInfo, String base64Image, int stretch) async {
     final String apiUrl =
-        '${dotenv.env['API_URL'].toString()}$sendImageEndpoint';
+        '${dotenv.env['API_URL'].toString()}$sendMessageOrPhotoEndpoint';
+
+    final Map payload = {
+      'TOKEN': dotenv.env['TOKEN'].toString(),
+      'TIPO': User.getUserTypeDescription(userType).toUpperCase(),
+      'CODIGO': flightCode,
+      'ACIONAMENTO_ID': flightInfo.id,
+      'TRECHO': stretch, //inlcluir verdadeiro trecho
+      'DATA_COLETA': DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+      'MENSAGEM': 'FOTO',
+      'IMAGEM': base64Image,
+    };
 
     try {
       var body = json.encode(payload);
@@ -101,47 +111,9 @@ class FlightService {
         dynamic jsonResponse = json.decode(response.body);
         return jsonResponse;
       } else {
-        print('Failed to send image. Status code: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Exception caught: $e');
-      return null;
-    }
-  }
-
-  Future<Map<String, dynamic>?> sendImage(String base64Image) async {
-    final String apiUrl =
-        '${dotenv.env['API_URL'].toString()}$sendImageEndpoint';
-    final Map<String, dynamic> payload = {
-      "TOKEN": dotenv.env['TOKEN'].toString(),
-      "TIPO": "PACIENTE",
-      "CODIGO": "121212",
-      "ACIONAMENTO_ID": 5,
-      "TRECHO": 1,
-      "DATA_COLETA": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-      "MENSAGEM": "FOTO",
-      "FOTO": base64Image,
-    };
-
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(payload),
-      );
-
-      if (response.statusCode == 200) {
-        var responseJson = jsonDecode(response.body);
-        return responseJson;
-      } else {
-        print('Failed to send image. Status code: ${response.statusCode}');
-        return null;
-      }
-    } catch (e) {
-      print('Exception caught: $e');
       return null;
     }
   }

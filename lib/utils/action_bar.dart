@@ -36,27 +36,18 @@ class _ActionBarState extends State<ActionBar> {
   String updateMessage = "";
   Position? position;
 
-  Future<void> _pickImage(BuildContext context) async {
+  Future<void> pickImage(BuildContext context) async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       final String extension = image.name.split('.').last.toLowerCase();
       if (extension == 'jpg' || extension == 'jpeg' || extension == 'png') {
         final bytes = await image.readAsBytes();
         final base64Image = base64Encode(bytes);
+        int stretch = position == null ? 1 : position!.stretch;
 
-        final Map<String, dynamic> payload = {
-          'TOKEN': dotenv.env['TOKEN'].toString(),
-          'TIPO': User.getUserTypeDescription(widget.userType).toUpperCase(),
-          'CODIGO': widget.flightCode,
-          'ACIONAMENTO_ID': widget.flightInfo.id,
-          'TRECHO': 1, //inlcluir verdadeiro trecho
-          'DATA_COLETA':
-              DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-          'MENSAGEM': 'FOTO',
-          'IMAGEM': base64Image,
-        };
+        var response = await flightService.sendImage(widget.userType,
+            widget.flightCode, widget.flightInfo, base64Image, stretch);
 
-        var response = await flightService.sendImageWithPayload(payload);
         if (response != null) {
           switch (response['STATUS']) {
             case 200:
@@ -348,7 +339,7 @@ class _ActionBarState extends State<ActionBar> {
           children: [
             if (widget.takePhoto) ...[
               GestureDetector(
-                  onTap: () => _pickImage(context),
+                  onTap: () => pickImage(context),
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
