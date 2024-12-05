@@ -4,6 +4,7 @@ import 'package:app_ases/utils/action_bar.dart';
 import 'package:app_ases/utils/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:app_ases/utils/internet_status.dart';
 
 class Home extends StatefulWidget {
   FlightInfo flightInfo;
@@ -26,6 +27,8 @@ class _HomeState extends State<Home> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ActionBar(takePhoto: true, flightInfo: widget.flightInfo, userType: widget.userType, flightCode: widget.flightCode, setStretch: widget.setStretch),
+        const SizedBox(height: 16),
+        const InternetStatusWidget(),
         Expanded(
           child: ChatWidget(
             userType: widget.userType,
