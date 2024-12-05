@@ -19,11 +19,13 @@ class ActionBar extends StatefulWidget {
   final FlightInfo flightInfo;
   final UserType userType;
   final String flightCode;
+  final Function setStretch;
   ActionBar(
       {required this.takePhoto,
       required this.flightInfo,
       required this.userType,
-      required this.flightCode});
+      required this.flightCode,
+      required this.setStretch});
 
   @override
   State<ActionBar> createState() => _ActionBarState();
@@ -136,6 +138,7 @@ class _ActionBarState extends State<ActionBar> {
                   setState(() {
                     currentStretch = value!;
                   });
+                  widget.setStretch(stretchList.indexOf(currentStretch));
                 },
                 dropdownMenuEntries:
                     stretchList.map<DropdownMenuEntry<String>>((String value) {
@@ -214,7 +217,7 @@ class _ActionBarState extends State<ActionBar> {
       updateMessage = "Não foi possível atualizar. Tente novamente";
     }
     Navigator.pop(context);
-    showFlutterToast(updateMessage);
+    showSnackBar(updateMessage);
   }
 
   showFlutterToast(String message){

@@ -7,7 +7,9 @@ class MonitorFlightScreen extends StatefulWidget {
   final FlightInfo flightInfo;
   final UserType userType;
   final String flightCode;
-  MonitorFlightScreen({super.key, required this.flightInfo, required this.userType, required this.flightCode});
+  Function setStretch;
+  int currentStretch;
+  MonitorFlightScreen({super.key, required this.flightInfo, required this.userType, required this.flightCode, required this.setStretch, required this.currentStretch});
 
   @override
   State<MonitorFlightScreen> createState() => _MonitorFlightScreenState();
@@ -21,7 +23,12 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
     return Column(
       children: [
         // Barra de ação do topo
-        ActionBar(takePhoto: false, flightInfo: widget.flightInfo, userType: widget.userType, flightCode: widget.flightCode),
+        ActionBar(
+          takePhoto: false, 
+          flightInfo: widget.flightInfo, 
+          userType: widget.userType, 
+          flightCode: widget.flightCode,
+          setStretch: widget.setStretch),
         const SizedBox(height: 16),
 
         // Mensagem de conexão à internet
@@ -89,15 +96,13 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
                 Expanded(
                   child: Stepper(
                     type: StepperType.vertical,
-                    currentStep: currentIndexStep,
+                    currentStep: widget.currentStretch,
                     controlsBuilder:
                         (BuildContext context, ControlsDetails details) {
                       return const SizedBox.shrink(); // Remove os botões padrão
                     },
                     onStepTapped: (value) {
-                      setState(() {
-                        currentIndexStep = value;
-                      });
+                      widget.setStretch(value);
                     },
                     steps: widget.flightInfo.stretchs
                         .asMap()

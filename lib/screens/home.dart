@@ -5,12 +5,19 @@ import 'package:app_ases/utils/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   FlightInfo flightInfo;
   UserType userType;
   String flightCode;
-  Home({super.key, required this.flightInfo, required this.userType, required this.flightCode});
+  Function setStretch;
+  int currentStretch;
+  Home({super.key, required this.flightInfo, required this.userType, required this.flightCode, required this.setStretch, required this.currentStretch});
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,13 +25,14 @@ class Home extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        ActionBar(takePhoto: true, flightInfo: flightInfo, userType: userType, flightCode: flightCode),
+        ActionBar(takePhoto: true, flightInfo: widget.flightInfo, userType: widget.userType, flightCode: widget.flightCode, setStretch: widget.setStretch),
         Expanded(
           child: ChatWidget(
-            userType: userType,
-            userCode: flightCode,
-            flightInfo: flightInfo,
+            userType: widget.userType,
+            userCode: widget.flightCode,
+            flightInfo: widget.flightInfo,
             origemId: 9, 
+            currentStretch: widget.currentStretch,
           ),
         ),
       ],

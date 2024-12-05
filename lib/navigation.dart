@@ -17,18 +17,29 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int currentPageIndex = 0;
+  int currentStretch = 0;
+
+  setStretch(int newStretch){
+    setState(() {
+      currentStretch = newStretch;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
       Home(flightInfo: widget.flightInfo,
       userType: widget.userType,
-      flightCode: widget.flightCode
+      flightCode: widget.flightCode,
+      setStretch: setStretch,
+      currentStretch: currentStretch
       ),
       MonitorFlightScreen(
         flightInfo: widget.flightInfo, 
         userType: widget.userType,
         flightCode: widget.flightCode,
+        setStretch: setStretch,
+        currentStretch: currentStretch
       ),
       Profile(
         flightInfo: widget.flightInfo,

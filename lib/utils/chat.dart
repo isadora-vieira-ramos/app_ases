@@ -15,6 +15,7 @@ class ChatWidget extends StatefulWidget {
   final String userCode;
   final FlightInfo flightInfo;
   final int origemId; // Adicionado para filtrar mensagens por ORIGEM_ID
+  final int currentStretch;
 
   const ChatWidget({
     super.key,
@@ -22,6 +23,7 @@ class ChatWidget extends StatefulWidget {
     required this.userCode,
     required this.flightInfo,
     required this.origemId,
+    required this.currentStretch
   });
 
   @override
@@ -81,13 +83,13 @@ class _ChatWidgetState extends State<ChatWidget> {
 
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
-      if (result['STATUS'] == 200) {
+      if (result['status'] == 200) {
         setState(() {
           messages.removeWhere((message) => message['ID'] == messageId);
         });
         print('Mensagem deletada com sucesso.');
       } else {
-        print('Erro: ${result['MESSAGE']}');
+        print('Erro: ${result['message']}');
       }
     } else {
       print('Erro ao deletar a mensagem.');
@@ -98,7 +100,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
     final response = await flightService.sendMessageAndPhoto(
       widget.userType, widget.userCode, 
-      widget.flightInfo, currentLoadedImage, message, 1);
+      widget.flightInfo, currentLoadedImage, message, widget.currentStretch + 1);
 
     if (response.statusCode == 200) {
       messageController.clear();
