@@ -102,17 +102,18 @@ class _ChatWidgetState extends State<ChatWidget> {
       widget.userType, widget.userCode, 
       widget.flightInfo, currentLoadedImage, message, widget.currentStretch + 1);
 
-    if (response.statusCode == 200) {
-      messageController.clear();
-      fetchMessages(); // Refresh messages after sending
-    } else {
+    final result = jsonDecode(response.body);
+    if(result["status"] != 200 || response.statusCode != 200){
       Fluttertoast.showToast(
-          msg: "Não foi possível enviar a mensagem/foto",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          textColor: Colors.white,
-        );
+        msg: "Não foi possível enviar a mensagem/foto",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        textColor: Colors.white,
+      );
+    }else{
+      messageController.clear();
+      fetchMessages();
     }
   }
 

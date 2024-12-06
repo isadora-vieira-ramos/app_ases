@@ -111,17 +111,19 @@ class FlightService {
   Future<http.Response> fetchMessages(UserType userType,
     FlightInfo flightInfo, String userCode, int origemId) async {
     var type = User.getUserTypeDescription(userType).toUpperCase();
+    
+    var json = jsonEncode({
+      "TOKEN": dotenv.env['TOKEN'].toString(),
+      "TIPO": type,
+      "CODIGO": userCode,
+      "ACIONAMENTO_ID": flightInfo.id,
+    });
 
     final response = await http.post(
       Uri.parse(
           '${dotenv.env['API_URL'].toString()}$getMessagesEndpoint'), // URL correta
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        "TOKEN": dotenv.env['TOKEN'].toString(),
-        "TIPO": type,
-        "CODIGO": userCode,
-        "ACIONAMENTO_ID": flightInfo.id,
-      }),
+      body:json,
     );
 
     return response;
