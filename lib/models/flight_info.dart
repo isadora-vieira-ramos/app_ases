@@ -1,10 +1,10 @@
-class ResponseJson {
+class FlightResponseJson {
   final FlightInfo flightInfo;
 
-  ResponseJson({required this.flightInfo});
+  FlightResponseJson({required this.flightInfo});
 
-  factory ResponseJson.fromJson(Map<String, dynamic> json) {
-    return ResponseJson(
+  factory FlightResponseJson.fromJson(Map<String, dynamic> json) {
+    return FlightResponseJson(
       flightInfo: FlightInfo.fromJson(json['ACIONAMENTO']),
     );
   }
@@ -114,8 +114,8 @@ class PatientOrChaperone {
   late String district;
   late String city;
   late String state;
-  late String latitude;
-  late String longitude;
+  late String? latitude;
+  late String? longitude;
 
   PatientOrChaperone(
       {required this.id,
@@ -153,8 +153,8 @@ class PatientOrChaperone {
         district: json['BAIRRO'],
         city: json['CIDADE'],
         state: json['ESTADO'],
-        latitude: json['LATITUDE'],
-        longitude: json['LONGITUDE']);
+        latitude: json['LATITUDE'] ?? 'null',
+        longitude: json['LONGITUDE'] ?? 'null');
   }
 }
 

@@ -1,10 +1,19 @@
 import 'package:app_ases/models/flight_info.dart';
+import 'package:app_ases/models/user.dart';
 import 'package:app_ases/utils/action_bar.dart';
+import 'package:app_ases/utils/chat.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Home extends StatelessWidget {
   FlightInfo flightInfo;
-  Home({super.key, required this.flightInfo});
+  UserType userType;
+  String flightCode;
+  Home(
+      {super.key,
+      required this.flightInfo,
+      required this.userType,
+      required this.flightCode});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +21,17 @@ class Home extends StatelessWidget {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [ActionBar(takePhoto: true, flightInfo: flightInfo)],
+      children: [
+        ActionBar(
+            takePhoto: true,
+            flightInfo: flightInfo,
+            userType: userType,
+            flightCode: flightCode),
+        Expanded(
+          child: ChatWidget(
+              userType: userType, userCode: flightCode, flightInfo: flightInfo),
+        ),
+      ],
     ));
   }
 }
