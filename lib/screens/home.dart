@@ -11,7 +11,13 @@ class Home extends StatefulWidget {
   String flightCode;
   Function setStretch;
   int currentStretch;
-  Home({super.key, required this.flightInfo, required this.userType, required this.flightCode, required this.setStretch, required this.currentStretch});
+  Home(
+      {super.key,
+      required this.flightInfo,
+      required this.userType,
+      required this.flightCode,
+      required this.setStretch,
+      required this.currentStretch});
 
   @override
   State<Home> createState() => _HomeState();
@@ -25,13 +31,17 @@ class _HomeState extends State<Home> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        ActionBar(takePhoto: true, flightInfo: widget.flightInfo, userType: widget.userType, flightCode: widget.flightCode, setStretch: widget.setStretch),
+        ActionBar(
+            takePhoto: true,
+            flightInfo: widget.flightInfo,
+            userType: widget.userType,
+            flightCode: widget.flightCode,
+            setStretch: widget.setStretch),
         Expanded(
           child: ChatWidget(
             userType: widget.userType,
             userCode: widget.flightCode,
             flightInfo: widget.flightInfo,
-            origemId: 9, 
             currentStretch: widget.currentStretch,
           ),
         ),

@@ -81,8 +81,13 @@ class FlightService {
     }
   }
 
-  Future<http.Response> sendMessageAndPhoto(UserType userType, String flightCode,
-      FlightInfo flightInfo, String base64Image, String message, int stretch) async {
+  Future<http.Response> sendMessageAndPhoto(
+      UserType userType,
+      String flightCode,
+      FlightInfo flightInfo,
+      String base64Image,
+      String message,
+      int stretch) async {
     final String apiUrl =
         '${dotenv.env['API_URL'].toString()}$sendMessageOrPhotoEndpoint';
 
@@ -96,7 +101,7 @@ class FlightService {
       'MENSAGEM': message.isEmpty ? 'FOTO' : message,
       'FOTO': base64Image.isEmpty ? 'MENSAGEM' : base64Image,
     };
-      
+
     var body = json.encode(payload);
     var response = await http.post(
       Uri.parse(apiUrl),
@@ -108,10 +113,10 @@ class FlightService {
     return response;
   }
 
-  Future<http.Response> fetchMessages(UserType userType,
-    FlightInfo flightInfo, String userCode, int origemId) async {
+  Future<http.Response> fetchMessages(
+      UserType userType, FlightInfo flightInfo, String userCode) async {
     var type = User.getUserTypeDescription(userType).toUpperCase();
-    
+
     var json = jsonEncode({
       "TOKEN": dotenv.env['TOKEN'].toString(),
       "TIPO": type,
@@ -123,11 +128,9 @@ class FlightService {
       Uri.parse(
           '${dotenv.env['API_URL'].toString()}$getMessagesEndpoint'), // URL correta
       headers: {'Content-Type': 'application/json'},
-      body:json,
+      body: json,
     );
 
     return response;
   }
-
-
 }
