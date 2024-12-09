@@ -97,6 +97,7 @@ class Profile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      readOnly: true,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey[200],
@@ -118,6 +119,7 @@ class Profile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      readOnly: true,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey[200],
@@ -140,6 +142,7 @@ class Profile extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: TextField(
+                        readOnly: true,
                         minLines: 1,
                         maxLines: 3,
                         decoration: InputDecoration(
@@ -163,6 +166,7 @@ class Profile extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: TextField(
+                        readOnly: true,
                         minLines: 1,
                         maxLines: 3,
                         decoration: InputDecoration(
@@ -188,6 +192,7 @@ class Profile extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: TextField(
+                        readOnly: true,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.grey[200],
