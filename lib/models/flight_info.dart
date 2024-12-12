@@ -99,6 +99,7 @@ class FlightInfo {
 }
 
 class PatientOrChaperone {
+  late String? accessCode;
   late int id;
   late String name;
   late int age;
@@ -118,7 +119,8 @@ class PatientOrChaperone {
   late String? longitude;
 
   PatientOrChaperone(
-      {required this.id,
+      {required this.accessCode,
+      required this.id,
       required this.name,
       required this.age,
       required this.email,
@@ -138,6 +140,7 @@ class PatientOrChaperone {
 
   factory PatientOrChaperone.fromJson(Map<String, dynamic> json) {
     return PatientOrChaperone(
+        accessCode: json['ACCESS_CODE'] ?? '',
         id: json['ID'],
         name: json['NOME'],
         age: json['IDADE'],
@@ -328,6 +331,7 @@ class Stretch {
 }
 
 class Volunteer {
+  late String? accessCode;
   late int id;
   late String name;
   late String photo;
@@ -338,7 +342,8 @@ class Volunteer {
   late String weight;
 
   Volunteer(
-      {required this.id,
+      {required this.accessCode,
+      required this.id,
       required this.name,
       required this.photo,
       required this.role,
@@ -349,6 +354,7 @@ class Volunteer {
 
   factory Volunteer.fromJson(Map<String, dynamic> json) {
     return Volunteer(
+      accessCode: json['ACCESS_CODE'] ?? '',
       id: json['ID'],
       name: json['NOME'],
       photo: json['FOTO'],

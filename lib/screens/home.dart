@@ -12,7 +12,13 @@ class Home extends StatefulWidget {
   String flightCode;
   Function setStretch;
   int currentStretch;
-  Home({super.key, required this.flightInfo, required this.userType, required this.flightCode, required this.setStretch, required this.currentStretch});
+  Home(
+      {super.key,
+      required this.flightInfo,
+      required this.userType,
+      required this.flightCode,
+      required this.setStretch,
+      required this.currentStretch});
 
   @override
   State<Home> createState() => _HomeState();
@@ -34,7 +40,6 @@ class _HomeState extends State<Home> {
             userType: widget.userType,
             userCode: widget.flightCode,
             flightInfo: widget.flightInfo,
-            origemId: 9, 
             currentStretch: widget.currentStretch,
           ),
         ),
