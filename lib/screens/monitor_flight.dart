@@ -2,6 +2,7 @@ import 'package:app_ases/models/flight_info.dart';
 import 'package:app_ases/models/user.dart';
 import 'package:app_ases/utils/action_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:app_ases/utils/internet_status.dart';
 
 class MonitorFlightScreen extends StatefulWidget {
   final FlightInfo flightInfo;
@@ -31,30 +32,8 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
           setStretch: widget.setStretch),
         const SizedBox(height: 16),
 
-        // Mensagem de conexão à internet
-        Center(
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 6,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                "Você está conectado a internet!",
-                style: TextStyle(fontSize: 16, color: Colors.green),
-              ),
-            ),
-          ),
-        ),
+        // Componente de status de conexão com a internet
+        const InternetStatusWidget(),
         const SizedBox(height: 16),
 
         // Conteúdo com Stepper
