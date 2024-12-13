@@ -189,15 +189,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                         return 'VOLUNTARIO';
                       // Adicione outros casos conforme necessário
                       default:
-                        return '';
+                        return 'ACOMPANHANTE';
                     }
                   }
 
                   final currentUserType = userTypeToString(widget.userType);
-
-                  print(
-                      "Message TIPO: ${message['TIPO']}, Current User Type: $currentUserType");
-
                   final isCurrentUser = message['TIPO'] == currentUserType;
 
                   return Align(
