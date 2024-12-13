@@ -4,6 +4,7 @@ import 'package:app_ases/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// Tela de carrossel de boas-vindas
 class WelcomeCarousel extends StatefulWidget {
   FlightInfo flightInfo;
   UserType userType;

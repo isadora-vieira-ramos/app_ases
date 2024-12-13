@@ -3,12 +3,14 @@ import 'package:app_ases/models/user.dart';
 import 'package:app_ases/screens/welcome_carousel.dart'; // Certifique-se de importar a tela correta.
 import 'package:flutter/material.dart';
 
+// Tela de perfil
 class Profile extends StatelessWidget {
   FlightInfo flightInfo;
   UserType userType;
   String flightCode;
   Profile({super.key, required this.flightInfo, required this.userType, required this.flightCode});
 
+// Funções para obter os dados do usuário
   String getUsername(){
     if(userType == UserType.patient){
       return flightInfo.patient.name;
@@ -21,6 +23,7 @@ class Profile extends StatelessWidget {
     }
   }
 
+//  Função para obter o telefone do usuário
   String getTelephone(){
     if(userType == UserType.patient){
       return flightInfo.patient.telephone;
@@ -33,6 +36,7 @@ class Profile extends StatelessWidget {
     }
   }
 
+//  Função para obter o endereço do usuário
   String getAddress(){
     if(userType == UserType.patient){
       String addressDetails = flightInfo.accomodation.additionalAddressDetails.isEmpty? '': "${flightInfo.accomodation.additionalAddressDetails},"; 
@@ -44,11 +48,13 @@ class Profile extends StatelessWidget {
     }
   }
 
+//  Função para obter a hospedagem do usuário
   String getAccommodation(){
     String addressDetails = flightInfo.accomodation.additionalAddressDetails.isEmpty? '': "${flightInfo.accomodation.additionalAddressDetails},"; 
     return "${flightInfo.accomodation.name}\n${flightInfo.accomodation.address}, ${flightInfo.accomodation.number}, ${addressDetails} ${flightInfo.accomodation.district}, ${flightInfo.accomodation.city}, ${flightInfo.accomodation.state}";
   }
 
+//  Função para obter a função do usuário
   String getRole(){
     var loggedUser = flightInfo.volunteers.where((chaperone) => chaperone.accessCode != '');
       return loggedUser.first.role;
@@ -75,7 +81,7 @@ class Profile extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
+              child: Column( 
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Padding(

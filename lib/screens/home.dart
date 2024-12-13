@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:app_ases/utils/internet_status.dart';
 
+// tela principal  
 class Home extends StatefulWidget {
   FlightInfo flightInfo;
   UserType userType;
@@ -26,7 +27,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return Scaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,

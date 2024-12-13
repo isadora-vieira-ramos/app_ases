@@ -3,7 +3,7 @@ class FlightResponseJson {
 
   FlightResponseJson({required this.flightInfo});
 
-  factory FlightResponseJson.fromJson(Map<String, dynamic> json) {
+  factory FlightResponseJson.fromJson(Map<String, dynamic> json) { //converte o json em um objeto FlightResponseJson
     return FlightResponseJson(
       flightInfo: FlightInfo.fromJson(json['ACIONAMENTO']),
     );
@@ -16,6 +16,7 @@ class FlightResponseJson {
   }
 }
 
+//classe que representa as informações do voo
 class FlightInfo {
   late int id;
   late String bookingCode;
@@ -78,7 +79,7 @@ class FlightInfo {
         volunteers: volunteers);
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() { //converte o objeto em um json
     return {
       'ID': id,
       'ACIONAMENTO': bookingCode,
@@ -97,6 +98,8 @@ class FlightInfo {
     };
   }
 }
+
+//classe que representa o paciente ou o acompanhante
 
 class PatientOrChaperone {
   late String? accessCode;
@@ -138,7 +141,7 @@ class PatientOrChaperone {
       required this.latitude,
       required this.longitude});
 
-  factory PatientOrChaperone.fromJson(Map<String, dynamic> json) {
+  factory PatientOrChaperone.fromJson(Map<String, dynamic> json) { //converte o json em um objeto PatientOrChaperone
     return PatientOrChaperone(
         accessCode: json['ACCESS_CODE'] ?? '',
         id: json['ID'],
@@ -161,6 +164,7 @@ class PatientOrChaperone {
   }
 }
 
+//classe que representa o hospital
 class Hospital {
   late int id;
   late String name;
@@ -191,8 +195,8 @@ class Hospital {
       required this.latitude,
       required this.longitude});
 
-  factory Hospital.fromJson(Map<String, dynamic> json) {
-    return Hospital(
+  factory Hospital.fromJson(Map<String, dynamic> json) { //converte o json em um objeto Hospital
+    return Hospital( 
         id: json['ID'],
         name: json['HOSPITAL'],
         healthOfficial: json['CONTATO'],
@@ -209,6 +213,7 @@ class Hospital {
   }
 }
 
+//classe que representa a hospedagem
 class Accommodation {
   late int id;
   late String name;
@@ -239,7 +244,7 @@ class Accommodation {
       required this.latitude,
       required this.longitude});
 
-  factory Accommodation.fromJson(Map<String, dynamic> json) {
+  factory Accommodation.fromJson(Map<String, dynamic> json) { //converte o json em um objeto Accommodation
     return Accommodation(
         id: json['ID'],
         name: json['HOSPEDAGEM'],
@@ -257,6 +262,7 @@ class Accommodation {
   }
 }
 
+//classe que representa a aeronave
 class Airplane {
   late String prefix;
   late String manufacturer;
@@ -279,7 +285,7 @@ class Airplane {
       required this.color,
       required this.photo});
 
-  factory Airplane.fromJson(Map<String, dynamic> json) {
+  factory Airplane.fromJson(Map<String, dynamic> json) { //converte o json em um objeto Airplane
     return Airplane(
       prefix: json['PREFIXO'],
       manufacturer: json['FABRICANTE'],
@@ -294,6 +300,7 @@ class Airplane {
   }
 }
 
+//classe que representa o trecho
 class Stretch {
   late int id;
   late String stretchName;
@@ -316,7 +323,7 @@ class Stretch {
       required this.distance,
       required this.duration});
 
-  factory Stretch.fromJson(Map<String, dynamic> json) {
+  factory Stretch.fromJson(Map<String, dynamic> json) { //converte o json em um objeto Stretch
     return Stretch(
         id: json['TRECHO'],
         stretchName: json['NOME'],
@@ -330,6 +337,7 @@ class Stretch {
   }
 }
 
+//classe que representa o voluntário
 class Volunteer {
   late String? accessCode;
   late int id;
@@ -352,7 +360,7 @@ class Volunteer {
       required this.height,
       required this.weight});
 
-  factory Volunteer.fromJson(Map<String, dynamic> json) {
+  factory Volunteer.fromJson(Map<String, dynamic> json) { //converte o json em um objeto Volunteer
     return Volunteer(
       accessCode: json['ACCESS_CODE'] ?? '',
       id: json['ID'],
