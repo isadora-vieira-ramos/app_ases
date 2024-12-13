@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:app_ases/navigation.dart';
 
+//classe que cria a tela de inserção de código de acesso
 class FlightCode extends StatefulWidget {
   const FlightCode({super.key});
 
@@ -13,6 +14,7 @@ class FlightCode extends StatefulWidget {
   State<FlightCode> createState() => _FlightCodeState();
 }
 
+//classe que cria o estado da tela de inserção de código de acesso
 class _FlightCodeState extends State<FlightCode> {
   FlightService service = FlightService();
   FlightInfo? flightInfo;
@@ -20,6 +22,7 @@ class _FlightCodeState extends State<FlightCode> {
   String? flightCode;
   String? errorMessage;
 
+//exibe um dialogo com o termo de uso de imagem
   void goToHome(BuildContext context) {
     showDialog(
       context: context,
@@ -96,7 +99,7 @@ class _FlightCodeState extends State<FlightCode> {
                 ],
               ),
             ),
-            TextButton(
+            TextButton( //botão para concordar com o termo de uso de imagem que redireciona para próxima página
               onPressed: () {
                 if (selectedValue == 'Paciente' ||
                     selectedValue == 'Acompanhante') {
@@ -150,18 +153,19 @@ class _FlightCodeState extends State<FlightCode> {
     );
   }
 
+//valida se os campos estão preenchidos e se o código de acesso é válido
   void validateAndSubmit(BuildContext context) async {
     setState(() {
       errorMessage = null;
     });
-
+//se o valor selecionado for nulo ou o código de voo for nulo ou vazio, exibe uma mensagem de erro
     if (selectedValue == null || flightCode == null || flightCode!.isEmpty) {
       setState(() {
         errorMessage = 'Por favor, preencha todos os campos.';
       });
     } else {
       var currentUser = User.getUserTypeWithDescription(selectedValue!);
-
+//chama o método fetchFlightInfo do serviço de voo para buscar as informações do voo
       flightInfo = await service.fetchFlightInfo(currentUser, flightCode!);
       if (flightInfo != null) {
         goToHome(context);
@@ -174,6 +178,7 @@ class _FlightCodeState extends State<FlightCode> {
     }
   }
 
+//exibe um dialogo com as informações de recuperação de código de acesso
   void showRecoveryMessage() {
     showDialog(
       context: context,
@@ -198,6 +203,7 @@ class _FlightCodeState extends State<FlightCode> {
     );
   }
 
+//constrói a tela de inserção de código de acesso
   @override
   Widget build(BuildContext context) {
     return Scaffold(

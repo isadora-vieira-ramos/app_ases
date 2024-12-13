@@ -1,5 +1,6 @@
 import 'package:app_ases/models/user.dart';
 
+//classe que representa a posição do usuário
 class Position {
   late UserType userType;
   late String flightCode;

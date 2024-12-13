@@ -12,7 +12,7 @@ class User {
     return name;
   }
 
-  static UserType getUserTypeWithDescription(String userType) {
+  static UserType getUserTypeWithDescription(String userType) { //retorna o tipo de usuário
     if (userType == 'Paciente') {
       return UserType.patient;
     } else if (userType == 'Acompanhante') {
@@ -22,7 +22,7 @@ class User {
     }
   }
 
-  static String getUserTypeDescription(UserType userType) {
+  static String getUserTypeDescription(UserType userType) { //retorna a descrição do tipo de usuário
     if (userType == UserType.patient) {
       return 'Paciente';
     } else if (userType == UserType.chaperone) {

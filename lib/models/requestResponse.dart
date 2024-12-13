@@ -1,4 +1,4 @@
-class RequestResponse{
+class RequestResponse{ 
   late int status;
   late String message;
 

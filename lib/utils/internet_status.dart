@@ -11,6 +11,7 @@ class InternetStatusWidget extends StatefulWidget {
 class _InternetStatusWidgetState extends State<InternetStatusWidget> {
   bool isConnected = true;
 
+//checa a conectividade
   @override
   void initState() {
     super.initState();
@@ -20,11 +21,12 @@ class _InternetStatusWidgetState extends State<InternetStatusWidget> {
   void _checkConnectivity() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       setState(() {
-        isConnected = result != ConnectivityResult.none;
+        isConnected = result != ConnectivityResult.none; //se não for none, está conectado
       });
     });
   }
 
+//mostra o status da conexão
   @override
   Widget build(BuildContext context) {
     return Center(

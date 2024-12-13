@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:io';
 
+// Classe que representa a barra de ações
 class ActionBar extends StatefulWidget {
   final bool takePhoto;
   final FlightInfo flightInfo;
@@ -39,6 +40,7 @@ class _ActionBarState extends State<ActionBar> {
   String updateMessage = "";
   Position? position;
 
+// Função para pegar a imagem
   Future<void> pickImage(BuildContext context) async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -53,6 +55,7 @@ class _ActionBarState extends State<ActionBar> {
 
         dynamic jsonResponse = json.decode(response.body);
 
+// Verificação de imagem enviada
         if (response != null) {
           switch (jsonResponse['status']) {
             case 200:
@@ -104,6 +107,7 @@ class _ActionBarState extends State<ActionBar> {
     }
   }
 
+// Função para calcular a distância entre dois pontos
   bool distanceBetweenTwoPoints(double startLatitude, double startLongitude,
       double endLatitude, double endLongitude) {
     var distanceInMeters = _geolocatorPlatform.distanceBetween(
@@ -116,6 +120,7 @@ class _ActionBarState extends State<ActionBar> {
     }
   }
 
+// Função para enviar a posição
   void sendPosition() async {
     List<String> stretchList = widget.flightInfo.stretchs
         .map((stretch) => "De ${stretch.origin} até ${stretch.destination}")
@@ -179,10 +184,11 @@ class _ActionBarState extends State<ActionBar> {
         });
   }
 
+// Função para enviar a posição para a API
   void sendPositionToAPI(int stretchIndex) async {
     final geolocatorPosition = await _geolocatorPlatform.getCurrentPosition();
 
-    if (position != null) {
+    if (position != null) { //verifica se a posição já foi enviada
       double startLatitude = double.parse(position!.latitude);
       double startLongitude = double.parse(position!.longitude);
 
@@ -192,7 +198,7 @@ class _ActionBarState extends State<ActionBar> {
           geolocatorPosition.latitude,
           geolocatorPosition.longitude);
 
-      if (!isDistanceSignificative) {
+      if (!isDistanceSignificative) { //verifica se a distância é significativa
         Navigator.pop(context);
         showFlutterToast(
             "Distância entre o último ponto enviado e o atual é bem curta. Espere um pouco para enviar novamente.");
@@ -220,7 +226,7 @@ class _ActionBarState extends State<ActionBar> {
     showSnackBar(updateMessage);
   }
 
-  showFlutterToast(String message){
+  showFlutterToast(String message){ 
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
@@ -239,14 +245,15 @@ class _ActionBarState extends State<ActionBar> {
     ));
   }
 
-  Future<void> getCurrentPosition() async {
+// Função para pegar a posição atual
+  Future<void> getCurrentPosition() async { 
     final hasPermission = await handlePermission();
 
-    if (!hasPermission) {
+    if (!hasPermission) { //verifica se o app tem permissão para acessar a localização
       showSnackBar(
           "Não é possível enviar a posição sem permitir que o app verifique sua localização.");
     } else {
-      sendPosition();
+      sendPosition(); //envia a posição
     }
   }
 

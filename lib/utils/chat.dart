@@ -27,6 +27,8 @@ class ChatWidget extends StatefulWidget {
   _ChatWidgetState createState() => _ChatWidgetState();
 }
 
+// Widget para exibir o chat
+
 class _ChatWidgetState extends State<ChatWidget> {
   List<Map<String, dynamic>> messages = [];
   FlightService flightService = FlightService();
@@ -40,17 +42,18 @@ class _ChatWidgetState extends State<ChatWidget> {
     fetchMessages();
   }
 
+// Função para buscar as mensagens do chat
   Future<void> fetchMessages() async {
     final response = await flightService.fetchMessages(
         widget.userType, widget.flightInfo, widget.userCode);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200) { 
       final data = jsonDecode(response.body);
       setState(() {
         messages = List<Map<String, dynamic>>.from(data['MENSAGEMS']);
       });
     } else {
-      Fluttertoast.showToast(
+      Fluttertoast.showToast( 
         msg: "Não foi possível carregar as mensagens/fotos",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
@@ -60,6 +63,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     }
   }
 
+// Função para deletar uma mensagem
   Future<void> deleteMessage(int messageId) async {
     final response = await http.post(
       Uri.parse(
@@ -89,6 +93,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     }
   }
 
+// Função para enviar uma mensagem
   Future<void> sendMessage(String message) async {
     final response = await flightService.sendMessageAndPhoto(
         widget.userType,
@@ -98,7 +103,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         message,
         widget.currentStretch + 1);
 
-    final result = jsonDecode(response.body);
+    final result = jsonDecode(response.body); // Decodifica a resposta
     if (result["status"] != 200 || response.statusCode != 200) {
       Fluttertoast.showToast(
         msg: "Não foi possível enviar a mensagem/foto",
@@ -113,11 +118,12 @@ class _ChatWidgetState extends State<ChatWidget> {
     }
   }
 
+// Função para carregar uma imagem
   Future<void> loadImage() async {
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      final String extension = image.name.split('.').last.toLowerCase();
-      if (extension == 'jpg' || extension == 'jpeg' || extension == 'png') {
+      final String extension = image.name.split('.').last.toLowerCase(); // Obtém a extensão do arquivo
+      if (extension == 'jpg' || extension == 'jpeg' || extension == 'png') { 
         final bytes = await image.readAsBytes();
         currentLoadedImage = base64Encode(bytes);
         Fluttertoast.showToast(

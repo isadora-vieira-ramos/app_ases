@@ -27,6 +27,7 @@ class _NavigationState extends State<Navigation> {
     });
   }
 
+//retorna o nome do usuário logado
   getUserName(){
     if(widget.userType == UserType.patient){
       return widget.flightInfo.patient.name;
@@ -39,6 +40,7 @@ class _NavigationState extends State<Navigation> {
     }
   }
 
+//verifica se o usuário logado tem foto
   bool hasImage(){
     if(widget.userType == UserType.patient){
       return true;
@@ -51,6 +53,7 @@ class _NavigationState extends State<Navigation> {
     }
   }
 
+//retorna a imagem do usuário logado
   Image getImage(){
     if(widget.userType == UserType.patient){
       return imageFromBase64String(widget.flightInfo.patient.photo);
@@ -65,6 +68,7 @@ class _NavigationState extends State<Navigation> {
     }
   }
 
+//converte a string base64 em imagem
   Image imageFromBase64String(String base64String) {
     return Image.memory(base64Decode(base64String), height: 100);
   }
