@@ -200,7 +200,7 @@ class _ActionBarState extends State<ActionBar> {
 
       if (!isDistanceSignificative) { //verifica se a distância é significativa
         Navigator.pop(context);
-        showFlutterToast(
+        showSnackBar(
             "Distância entre o último ponto enviado e o atual é bem curta. Espere um pouco para enviar novamente.");
         return;
       }
@@ -224,16 +224,6 @@ class _ActionBarState extends State<ActionBar> {
     }
     Navigator.pop(context);
     showSnackBar(updateMessage);
-  }
-
-  showFlutterToast(String message){ 
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: const Color(0xFF64ccf3),
-      textColor: Colors.white,
-    );
   }
 
   showSnackBar(String message) {
