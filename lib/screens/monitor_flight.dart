@@ -100,9 +100,11 @@ class _MonitorFlightScreenState extends State<MonitorFlightScreen> {
                               size: 24,
                             ),
                             const SizedBox(width: 8),
-                            Text(
-                              stretch.stretchName,
-                              style: const TextStyle(),
+                            Expanded(
+                              child: Text(
+                                stretch.stretchName,
+                                style: const TextStyle(),
+                              ),
                             ),
                           ],
                         ),
