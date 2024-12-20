@@ -196,71 +196,74 @@ class _ChatWidgetState extends State<ChatWidget> {
                   final currentUserType = userTypeToString(widget.userType);
                   final isCurrentUser = message['TIPO'] == currentUserType;
 
-                  return Align(
-                    alignment: isCurrentUser
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 4), // Reduzido
-                      padding: const EdgeInsets.all(8), // Reduzido
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width *
-                            0.65, // Reduzido
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            isCurrentUser ? Colors.blue[100] : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(
-                            8), // Ajuste adicional se necessário
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            message['MENSAGEM'] ?? 'No message',
-                            style: const TextStyle(fontSize: 14), // Reduzido
-                          ),
-                          const SizedBox(height: 2), // Reduzido
-                          Text(
-                            '${message['ORIGEM'] ?? 'Desconhecido'} - ${message['DATA_HORA'] ?? ''}',
-                            style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.grey[600]), // Reduzido
-                          ),
-                          if (isCurrentUser)
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: IconButton(
-                                icon: const Icon(Icons.delete,
-                                    color: Colors.red, size: 18), // Reduzido
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('Confirmação'),
-                                      content: const Text(
-                                          'Deseja realmente excluir esta mensagem?'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text('Cancelar'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            deleteMessage(message['ID']);
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Excluir'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom:4, top: 4, left: 8, right: 8),
+                    child: Align(
+                      alignment: isCurrentUser
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 2, horizontal: 4), // Reduzido
+                        padding: const EdgeInsets.all(8), // Reduzido
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width *
+                              0.65, // Reduzido
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              isCurrentUser ? Colors.blue[100] : Colors.grey[300],
+                          borderRadius: BorderRadius.circular(
+                              8), // Ajuste adicional se necessário
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              message['MENSAGEM'] ?? 'No message',
+                              style: const TextStyle(fontSize: 14), // Reduzido
                             ),
-                        ],
+                            const SizedBox(height: 2), // Reduzido
+                            Text(
+                              '${message['ORIGEM'] ?? 'Desconhecido'} - ${message['DATA_HORA'] ?? ''}',
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.grey[600]), // Reduzido
+                            ),
+                            // if (isCurrentUser)
+                            //   Align(
+                            //     alignment: Alignment.centerRight,
+                            //     child: IconButton(
+                            //       icon: const Icon(Icons.delete,
+                            //           color: Colors.red, size: 18), // Reduzido
+                            //       onPressed: () {
+                            //         showDialog(
+                            //           context: context,
+                            //           builder: (context) => AlertDialog(
+                            //             title: const Text('Confirmação'),
+                            //             content: const Text(
+                            //                 'Deseja realmente excluir esta mensagem?'),
+                            //             actions: [
+                            //               TextButton(
+                            //                 onPressed: () =>
+                            //                     Navigator.pop(context),
+                            //                 child: const Text('Cancelar'),
+                            //               ),
+                            //               TextButton(
+                            //                 onPressed: () {
+                            //                   deleteMessage(message['ID']);
+                            //                   Navigator.pop(context);
+                            //                 },
+                            //                 child: const Text('Excluir'),
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         );
+                            //       },
+                            //     ),
+                            //   ),
+                          ],
+                        ),
                       ),
                     ),
                   );
