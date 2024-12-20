@@ -1,5 +1,6 @@
 import 'package:app_ases/models/flight_info.dart';
 import 'package:app_ases/models/position.dart';
+import 'package:app_ases/models/requestResponse.dart';
 import 'package:app_ases/models/user.dart';
 import 'package:app_ases/screens/flight_code.dart';
 import 'package:app_ases/services/flight_service.dart';
@@ -7,40 +8,93 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'dart:io';
 
-
+// Classe que representa a barra de ações
 class ActionBar extends StatefulWidget {
   final bool takePhoto;
   final FlightInfo flightInfo;
   final UserType userType;
   final String flightCode;
-  ActionBar({required this.takePhoto, required this.flightInfo, required this.userType, required this.flightCode});
+  final Function setStretch;
+  ActionBar(
+      {required this.takePhoto,
+      required this.flightInfo,
+      required this.userType,
+      required this.flightCode,
+      required this.setStretch});
 
   @override
   State<ActionBar> createState() => _ActionBarState();
 }
 
 class _ActionBarState extends State<ActionBar> {
-  final geo.GeolocatorPlatform _geolocatorPlatform = geo.GeolocatorPlatform.instance;
+  final geo.GeolocatorPlatform _geolocatorPlatform =
+      geo.GeolocatorPlatform.instance;
   final FlightService flightService = FlightService();
   final ImagePicker _picker = ImagePicker();
-  String updateMessage ="";
+  String updateMessage = "";
   Position? position;
 
-  Future<void> _pickImage(BuildContext context) async {
+// Função para pegar a imagem
+  Future<void> pickImage(BuildContext context) async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       final String extension = image.name.split('.').last.toLowerCase();
       if (extension == 'jpg' || extension == 'jpeg' || extension == 'png') {
-        Fluttertoast.showToast(
-          msg: "Imagem alterada",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: const Color(0xFF64ccf3), 
-          textColor: Colors.white,
-        );
+        final bytes = await image.readAsBytes();
+        final base64Image = base64Encode(bytes);
+        int stretch = position == null ? 1 : position!.stretch;
+
+        var response = await flightService.sendMessageAndPhoto(widget.userType,
+            widget.flightCode, widget.flightInfo, base64Image, "", stretch);
+
+        dynamic jsonResponse = json.decode(response.body);
+
+// Verificação de imagem enviada
+        if (response != null) {
+          switch (jsonResponse['status']) {
+            case 200:
+              Fluttertoast.showToast(
+                msg: "Imagem enviada com sucesso",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: const Color(0xFF64ccf3),
+                textColor: Colors.white,
+              );
+              break;
+            case 404:
+              String errorMessage = jsonResponse['message'] ?? "Erro desconhecido";
+              Fluttertoast.showToast(
+                msg: errorMessage,
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: const Color(0xFF64ccf3),
+                textColor: Colors.white,
+              );
+              break;
+            default:
+              Fluttertoast.showToast(
+                msg: "Erro desconhecido",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: const Color(0xFF64ccf3),
+                textColor: Colors.white,
+              );
+          }
+        } else {
+          Fluttertoast.showToast(
+            msg: "Falha ao enviar imagem",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: const Color(0xFF64ccf3),
+            textColor: Colors.white,
+          );
+        }
       } else {
         Fluttertoast.showToast(
           msg: "Formato inválido",
@@ -53,17 +107,24 @@ class _ActionBarState extends State<ActionBar> {
     }
   }
 
-  bool distanceBetweenTwoPoints(double startLatitude, double startLongitude, double endLatitude, double endLongitude){
-    var distanceInMeters = _geolocatorPlatform.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
-    if(distanceInMeters > 555){ //verifica se a distância é maior que 0,3 milhas
+// Função para calcular a distância entre dois pontos
+  bool distanceBetweenTwoPoints(double startLatitude, double startLongitude,
+      double endLatitude, double endLongitude) {
+    var distanceInMeters = _geolocatorPlatform.distanceBetween(
+        startLatitude, startLongitude, endLatitude, endLongitude);
+    if (distanceInMeters > 555) {
+      //verifica se a distância é maior que 0,3 milhas
       return true;
-    }else{
+    } else {
       return false;
     }
   }
 
-  void sendPosition()async{
-    List<String> stretchList = widget.flightInfo.stretchs.map((stretch) => "De ${stretch.origin} até ${stretch.destination}").toList();
+// Função para enviar a posição
+  void sendPosition() async {
+    List<String> stretchList = widget.flightInfo.stretchs
+        .map((stretch) => "De ${stretch.origin} até ${stretch.destination}")
+        .toList();
 
     String currentStretch = stretchList.first;
     AlertDialog alert = AlertDialog(
@@ -82,10 +143,17 @@ class _ActionBarState extends State<ActionBar> {
                   setState(() {
                     currentStretch = value!;
                   });
+                  widget.setStretch(stretchList.indexOf(currentStretch));
                 },
-                dropdownMenuEntries: stretchList
-                    .map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry<String>(value: value, label: value, labelWidget: Text(value, style: const TextStyle(fontSize: 12),));
+                dropdownMenuEntries:
+                    stretchList.map<DropdownMenuEntry<String>>((String value) {
+                  return DropdownMenuEntry<String>(
+                      value: value,
+                      label: value,
+                      labelWidget: Text(
+                        value,
+                        style: const TextStyle(fontSize: 12),
+                      ));
                 }).toList()),
           ],
         ),
@@ -116,62 +184,66 @@ class _ActionBarState extends State<ActionBar> {
         });
   }
 
-  void sendPositionToAPI(int stretchIndex)async{
+// Função para enviar a posição para a API
+  void sendPositionToAPI(int stretchIndex) async {
     final geolocatorPosition = await _geolocatorPlatform.getCurrentPosition();
-    
-    if(position != null){
+
+    if (position != null) { //verifica se a posição já foi enviada
       double startLatitude = double.parse(position!.latitude);
       double startLongitude = double.parse(position!.longitude);
-      
-      bool isDistanceSignificative = distanceBetweenTwoPoints(
-        startLatitude, startLongitude, geolocatorPosition.latitude, geolocatorPosition.longitude);
 
-      if(!isDistanceSignificative){
+      bool isDistanceSignificative = distanceBetweenTwoPoints(
+          startLatitude,
+          startLongitude,
+          geolocatorPosition.latitude,
+          geolocatorPosition.longitude);
+
+      if (!isDistanceSignificative) { //verifica se a distância é significativa
         Navigator.pop(context);
-        showSnackBar("Distância entre o último ponto enviado e o atual é bem curta. Espere um pouco para enviar novamente.");
+        showSnackBar(
+            "Distância entre o último ponto enviado e o atual é bem curta. Espere um pouco para enviar novamente.");
         return;
       }
     }
 
     position = Position(
-      userType: widget.userType, 
-      flightCode: widget.flightCode,
-      flightId: widget.flightInfo.id,
-      stretch: stretchIndex,
-      date: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-      latitude: geolocatorPosition.latitude.toString(),
-      longitude: geolocatorPosition.longitude.toString(),
-      speed: geolocatorPosition.speed,
-      altitude: geolocatorPosition.altitude
-    );
+        userType: widget.userType,
+        flightCode: widget.flightCode,
+        flightId: widget.flightInfo.id,
+        stretch: stretchIndex,
+        date: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+        latitude: geolocatorPosition.latitude.toString(),
+        longitude: geolocatorPosition.longitude.toString(),
+        speed: geolocatorPosition.speed,
+        altitude: geolocatorPosition.altitude);
     var result = await flightService.sendPosition(position!);
-    if(result){
+    if (result) {
       updateMessage = "Atualizado com sucesso!";
-    }else{
+    } else {
       updateMessage = "Não foi possível atualizar. Tente novamente";
     }
     Navigator.pop(context);
     showSnackBar(updateMessage);
   }
 
-  showSnackBar(String message){
-    ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+  showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         message,
-        style: const TextStyle(
-          fontSize: 20
-        ),
+        style: const TextStyle(fontSize: 20),
       ),
     ));
-  } 
+  }
 
-  Future<void> getCurrentPosition() async {
+// Função para pegar a posição atual
+  Future<void> getCurrentPosition() async { 
     final hasPermission = await handlePermission();
 
-    if (!hasPermission) {
-      showSnackBar("Não é possível enviar a posição sem permitir que o app verifique sua localização.");
-    }else{
-      sendPosition();
+    if (!hasPermission) { //verifica se o app tem permissão para acessar a localização
+      showSnackBar(
+          "Não é possível enviar a posição sem permitir que o app verifique sua localização.");
+    } else {
+      sendPosition(); //envia a posição
     }
   }
 
@@ -208,20 +280,26 @@ class _ActionBarState extends State<ActionBar> {
       );
     }
 
+    Image imageFromBase64String(String base64String) {
+      return Image.memory(base64Decode(base64String), height: 100);
+    }
+
     void showFlightInfoModal() async {
       try {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Informação do Piloto'),
+              title: widget.userType != UserType.volunteer? const Text('Informação do Voluntário') : const Text('Informação do Paciente'),
               content: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Image.network(widget.flightInfo.volunteers[0].photo, height: 100),
+                    imageFromBase64String(widget.userType != UserType.volunteer? widget.flightInfo.volunteers[0].photo: widget.flightInfo.patient.photo),
                     const SizedBox(height: 8),
-                    Text(widget.flightInfo.volunteers[0].name,
-                        style: const TextStyle(fontSize: 18)),
+                    Text(widget.userType != UserType.volunteer? 
+                    "${widget.flightInfo.volunteers[0].name} - ${widget.flightInfo.volunteers[0].role}" :
+                    widget.flightInfo.patient.name,
+                        style: const TextStyle(fontSize: 15)),
                     const Divider(),
                   ],
                 ),
@@ -279,7 +357,7 @@ class _ActionBarState extends State<ActionBar> {
           children: [
             if (widget.takePhoto) ...[
               GestureDetector(
-                  onTap: () => _pickImage(context),
+                  onTap: () => pickImage(context),
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
